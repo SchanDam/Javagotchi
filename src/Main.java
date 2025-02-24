@@ -112,7 +112,7 @@ public class Main {
                 Thread.sleep(1000);
                 System.out.print("Ich bin verhungert");
                 Functions.dotText();
-                System.out.println("Das Spiel ist vorbei.\n");
+                System.out.println("\nDas Spiel ist vorbei.\n");
                 Thread.sleep(1000);
                 ASCII.ritterTot();
                 Thread.sleep(200);

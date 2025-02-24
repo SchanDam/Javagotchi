@@ -40,7 +40,7 @@ public class Main {
             // Essen
             else if (input.equals("e")) {
                 if (att.getHunger() < 10) {
-                    att.setHunger(+1);
+                    att.setHunger(att.getHunger() + 1);
                     System.out.println("Danke für das Essen! Mein Hungerlevel ist: " + att.getHunger() + "\n");
                 }
                 else {
@@ -55,20 +55,21 @@ public class Main {
 
             // trainieren
             else if (input.equals("t")) {
-                System.out.println("\nIch muss meine Fähigkeiten mit Schwert und Schild trainieren!\nEin Jahr vergeht...");
-                att.setAge(+1);
+                System.out.print("\nIch muss meine Fähigkeiten mit Schwert und Schild trainieren!\nEin Jahr vergeht");
+                Functions.dotText();
+                att.setAge(att.getAge() + 1);
 
-                int strIncrease = rng.nextInt(1, 4);         // 1 - 3
-                int defIncrease = rng.nextInt(1, 3);         // 1 - 2
-                int hpIncrease = rng.nextInt(10, 21);        // 10 - 20
-                int hungerDecrease = rng.nextInt(-4, 0);    // -1 - -4
+                int strIncrease = rng.nextInt(1, 4);         // 1 bis 3
+                int defIncrease = rng.nextInt(1, 3);         // 1 bis 2
+                int hpIncrease = rng.nextInt(10, 21);        // 10 bis 20
+                int hungerDecrease = rng.nextInt(-4, 0);     // -1 bis -4
 
-                att.setPlayerStr(+strIncrease);
-                att.setPlayerDef(+defIncrease);
-                att.setPlayerHp(+hpIncrease);
-                att.setHunger(-hungerDecrease);
+                att.setPlayerStr(att.getPlayerStr() + strIncrease);
+                att.setPlayerDef(att.getPlayerDef() + defIncrease);
+                att.setPlayerHp(att.getPlayerHp() + hpIncrease);
+                att.setHunger(att.getHunger() + hungerDecrease);
 
-                att.setPunkte(strIncrease + defIncrease + hpIncrease);
+                att.setPunkte(att.getPunkte() + strIncrease + defIncrease + hpIncrease);
 
                 Thread.sleep(1000);
                 System.out.println("\nIch bin um ein Jahr gealtert. Ich bin nun " + att.getAge() + " Jahre alt.");
@@ -81,11 +82,11 @@ public class Main {
                 System.out.println("Ich bin hungrig! " + hungerDecrease + " = " + att.getHunger() + "\n");
             }
 
-            // Cheatmenü
-            else if (input.equals("cheat")) {
-                System.out.println("\nGeheimes Cheatmenü gefunden!");
-                Thread.sleep(500);
-                Functions.cheatMenu();
+            // Debugmenü
+            else if (input.equals("debug")) {
+                System.out.print("\nLade Debugmenü, bitte warten");
+                Functions.dotText();
+                Functions.debugMenu();
             }
 
             // Neustart
@@ -95,18 +96,22 @@ public class Main {
                 main(null);
             }
 
+            // Auflisten
+            else if (input.isBlank()) {
+                Functions.mainMenu();
+            }
             // falsche Taste
             else {
                 System.out.println("\nungültige Taste");
                 Thread.sleep(200);
-                Functions.hauptmenu();
+                Functions.mainMenu();
             }
 
             // Hunger tracken
             if (att.getHunger() < 1) {
                 Thread.sleep(1000);
-                System.out.println("Ich bin verhungert...");
-                Thread.sleep(1000);
+                System.out.print("Ich bin verhungert");
+                Functions.dotText();
                 System.out.println("Das Spiel ist vorbei.\n");
                 Thread.sleep(1000);
                 ASCII.ritterTot();

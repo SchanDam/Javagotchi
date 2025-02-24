@@ -5,7 +5,7 @@ public class Functions {
     private static final Attribute att = new Attribute();
 
     // Hauptmenü
-    public static void hauptmenu() throws InterruptedException {
+    public static void mainMenu() throws InterruptedException {
         System.out.println("\n Was möchstest du tun?\n");
         Thread.sleep(500);
         System.out.println("\"a\" für Attribute prüfen");
@@ -38,52 +38,57 @@ public class Functions {
     // Einleitung
     public static void einleitung() throws InterruptedException {
 
-        String name;
         System.out.println("\nDas Ziel des Spiels ist es 10 Jahre alt zu werden.");
         Thread.sleep(1000);
         System.out.println("Wie ist mein Name?");
-        name = sc.nextLine();
-        Thread.sleep(1000);
+        String newName = sc.nextLine();
+        att.setPlayerName(newName);
 
         // Godmode
-        if (name.equals("Godmode")) {
+        if (att.getPlayerName().equals("Godmode")) {
+            Thread.sleep(500);
             System.out.println("\nWoher wusstest du, dass es einen Godmode gibt?");
             Thread.sleep(1000);
             System.out.print("Godmode wird aktiviert, bitte warten");
-            Thread.sleep(1000);
-            System.out.print(".");
-            Thread.sleep(1000);
-            System.out.print(".");
-            Thread.sleep(1000);
-            System.out.print(".");
-            Thread.sleep(1000);
-            System.out.println("\nStärke, Verteidigung und Hunger auf 255 gesetzt, Lebenspunkte auf 9999 gesetzt.\n");
+            Functions.dotText();
+            System.out.println("\n\nStärke, Verteidigung und Hunger auf 255 gesetzt, Lebenspunkte auf 9999 gesetzt.\n");
             Thread.sleep(1500);
-            Functions.hauptmenu();
+            Functions.mainMenu();
 
             att.setPlayerStr(255);
             att.setPlayerDef(255);
             att.setPlayerHp(9999);
             att.setHunger(255);
         }
+
+        // Twigolu
         else if (att.getPlayerName().equals("Twigolu")) {
             System.out.println("\nOh, ich heiße wohl wie deine Katzen?!\n");
             Thread.sleep(1000);
             ASCII.Katze();
             Thread.sleep(1500);
-            Functions.hauptmenu();
+            Functions.mainMenu();
+        }
+
+        // Cyberpunk
+        else if (att.getPlayerName().equals("V")) {
+            System.out.println("Cyberpunk?\n");
+            Thread.sleep(1000);
+            ASCII.Cyberpunk();
+            Thread.sleep(1500);
+            Functions.mainMenu();
         }
         else {
             System.out.println("\nHallo! Ich bin ein Javagotchiritter und Ich heiße " + att.getPlayerName() + ". Trainiere mich und koche für mich, damit ich stärker werde!\n\n");
             Thread.sleep(1000);
             ASCII.javaRitter();
             Thread.sleep(1500);
-            Functions.hauptmenu();
+            Functions.mainMenu();
         }
     }
 
-    // Cheatmenü
-    public static void cheatMenu() throws InterruptedException {
+    // Debugmenü
+    public static void debugMenu() throws InterruptedException {
 
         while (true) {
 
@@ -105,43 +110,70 @@ public class Functions {
 
             if (Main.input.equals("a")) {
                 System.out.println("\nAuf welchen wert soll das Alter geändert werden?\n");
-                att.setAge() = sc.nextInt();
+                int newAge = sc.nextInt();
+                att.setAge(newAge);
                 sc.nextLine();
                 Thread.sleep(200);
                 System.out.println("\nAlter wurde auf " + att.getAge() + " gesetzt\n");
-            } else if (Main.input.equals("h")) {
+                Thread.sleep(200);
+            }
+            else if (Main.input.equals("h")) {
                 System.out.println("\nAuf welchen wert soll der Hunger geändert werden?\n");
-                att.setHunger() = sc.nextInt();
+                int newHunger = sc.nextInt();
+                att.setHunger(newHunger);
                 sc.nextLine();
                 Thread.sleep(200);
                 System.out.println("\nHunger wurde auf " + att.getHunger() + " gesetzt\n");
-            } else if (Main.input.equals("s")) {
+                Thread.sleep(200);
+            }
+            else if (Main.input.equals("s")) {
                 System.out.println("\nAuf welchen wert soll die Stärke geändert werden?\n");
-                att.setPlayerStr() = sc.nextInt();
+                int newStr = sc.nextInt();
+                att.setPlayerStr(newStr);
                 sc.nextLine();
                 Thread.sleep(200);
                 System.out.println("\nStärke wurde auf " + att.getPlayerStr() + " gesetzt\n");
-            } else if (Main.input.equals("v")) {
+                Thread.sleep(200);
+            }
+            else if (Main.input.equals("v")) {
                 System.out.println("\nAuf welchen wert soll die Verteidigung geändert werden?\n");
-                att.setPlayerDef() = sc.nextInt();
+                int newDef = sc.nextInt();
+                att.setPlayerDef(newDef);
                 sc.nextLine();
                 Thread.sleep(200);
                 System.out.println("\nVerteidigung wurde auf " + att.getPlayerDef() + " gesetzt\n");
-            } else if (Main.input.equals("l")) {
+                Thread.sleep(200);
+            }
+            else if (Main.input.equals("l")) {
                 System.out.println("\nAuf welchen wert soll die Lebenspunkte geändert werden?\n");
-                att.setPlayerHp() = sc.nextInt();
+                int newHp = sc.nextInt();
+                att.setPlayerHp(newHp);
                 sc.nextLine();
                 Thread.sleep(200);
                 System.out.println("\nLebenspunkte wurde auf " + att.getPlayerHp() + " gesetzt\n");
-            } else if (Main.input.equals("q")) {
-                System.out.println("\nIns Hauptmenü zurückkehren, bitte warten...");
-                Thread.sleep(1000);
-                Functions.hauptmenu();
+                Thread.sleep(200);
+            }
+            else if (Main.input.equals("q")) {
+                System.out.print("\nIns Hauptmenü zurückkehren, bitte warten");
+                dotText();
+                Functions.mainMenu();
                 break;
-            } else {
+            }
+            else {
                 System.out.println("ungültige Taste");
-                cheatMenu();
+                debugMenu();
             }
         }
+    }
+
+    // dots verzögert ausgeben
+    public static void dotText() throws InterruptedException {
+        Thread.sleep(1000);
+        System.out.print(".");
+        Thread.sleep(1000);
+        System.out.print(".");
+        Thread.sleep(1000);
+        System.out.print(".");
+        Thread.sleep(1000);
     }
 }

@@ -3,7 +3,7 @@ import java.util.Scanner;
 
 public class Main {
 
-    private static Attribute att = new Attribute();
+    public static Attribute att = new Attribute();
     static Random rng = new Random();
     static Scanner sc = new Scanner(System.in);
     static String input;

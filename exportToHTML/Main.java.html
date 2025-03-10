@@ -25,7 +25,7 @@ Main.java</font>
         <span class="s1">Scanner sc </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Scanner</span><span class="s2">(</span><span class="s1">System</span><span class="s2">.</span><span class="s1">in</span><span class="s2">);</span>
         <span class="s1">Random rng </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Random</span><span class="s2">();</span>
 
-        <span class="s3">// Attribute</span>
+        <span class="s3">// Character</span>
         <span class="s0">int </span><span class="s1">str </span><span class="s2">= </span><span class="s4">1</span><span class="s2">;</span>
         <span class="s0">int </span><span class="s1">def </span><span class="s2">= </span><span class="s4">1</span><span class="s2">;</span>
         <span class="s0">int </span><span class="s1">hp </span><span class="s2">= </span><span class="s4">100</span><span class="s2">;</span>
@@ -105,9 +105,9 @@ Main.java</font>
         <span class="s2">}</span>
     <span class="s2">}</span>
 
-    <span class="s3">// Attribute abfragen</span>
+    <span class="s3">// Character abfragen</span>
     <span class="s0">public static void </span><span class="s1">att</span><span class="s2">(</span><span class="s0">int </span><span class="s1">str</span><span class="s2">, </span><span class="s0">int </span><span class="s1">def</span><span class="s2">, </span><span class="s0">int </span><span class="s1">hp</span><span class="s2">, </span><span class="s0">int </span><span class="s1">age</span><span class="s2">, </span><span class="s0">int </span><span class="s1">hunger</span><span class="s2">) {</span>
-        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s5">&quot;</span><span class="s0">\n</span><span class="s5">Meine Attribute sind:&quot;</span><span class="s2">);</span>
+        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s5">&quot;</span><span class="s0">\n</span><span class="s5">Meine Character sind:&quot;</span><span class="s2">);</span>
         <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s5">&quot;Stärke: &quot; </span><span class="s2">+ </span><span class="s1">str</span><span class="s2">);</span>
         <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s5">&quot;Verteidigung: &quot; </span><span class="s2">+ </span><span class="s1">def</span><span class="s2">);</span><span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s5">&quot;Lebenspunkte: &quot; </span><span class="s2">+ </span><span class="s1">hp</span><span class="s2">);</span>
         <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s5">&quot;Alter: &quot; </span><span class="s2">+ </span><span class="s1">age</span><span class="s2">);</span>
@@ -118,7 +118,7 @@ Main.java</font>
     <span class="s0">public static void </span><span class="s1">wmdt</span><span class="s2">() </span><span class="s0">throws </span><span class="s1">InterruptedException </span><span class="s2">{</span>
         <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s5">&quot;</span><span class="s0">\n </span><span class="s5">Was möchstest du tun?</span><span class="s0">\n</span><span class="s5">&quot;</span><span class="s2">);</span>
         <span class="s1">Thread</span><span class="s2">.</span><span class="s1">sleep</span><span class="s2">(</span><span class="s4">500</span><span class="s2">);</span>
-        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s5">&quot;a für Attribute prüfen&quot;</span><span class="s2">);</span>
+        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s5">&quot;a für Character prüfen&quot;</span><span class="s2">);</span>
         <span class="s1">Thread</span><span class="s2">.</span><span class="s1">sleep</span><span class="s2">(</span><span class="s4">100</span><span class="s2">);</span>
         <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s5">&quot;e für Essen kochen&quot;</span><span class="s2">);</span>
         <span class="s1">Thread</span><span class="s2">.</span><span class="s1">sleep</span><span class="s2">(</span><span class="s4">100</span><span class="s2">);</span>

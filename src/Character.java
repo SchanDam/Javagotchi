@@ -18,6 +18,8 @@ public class Character {
         this.str = getStr;
         this.def = getDef;
         this.hp = getHp;
+        this.maxHp = hp;
+        this.gold = getGold;
     }
 
     public Character(String name, int getStr, int getDef, int getHp) {
@@ -94,10 +96,6 @@ public class Character {
 
     public int getMaxHp() {
         return maxHp;
-    }
-
-    public void setMaxHp(int maxHp) {
-        this.maxHp = maxHp;
     }
 
     public int calcDamage(Character enemy) {

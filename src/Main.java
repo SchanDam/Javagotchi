@@ -8,18 +8,18 @@ public class Main {
     public static void main(String[] args) throws Exception {
         boolean running = true;
 
-//        Game.einleitung();
+        Game.einleitung();
 
         // Funktionen
         while (running) {
-            System.out.printf("%n? für Menü%n");
+            System.out.printf("%n? für Menüanzeige%n");
             Thread.sleep(200);
             System.out.printf("Erwarte Eingabe:%n");
             input = sc.nextLine();
 
             // Programm beenden
             if (input.equals("q")) {
-                System.out.printf("%nTschüss, Bis bald!%n");
+                System.out.printf("%nTschüss, bis bald!%n");
                 Thread.sleep(200);
                 System.out.printf("Du hast %s Punkte erreicht!%n", Game.player.getPunkte());
                 Thread.sleep(500);
@@ -28,7 +28,7 @@ public class Main {
 
             // Punktestand abfragen
             else if (input.equals("p")) {
-                System.out.printf("%ndein aktueller Punktestand ist %s.%n", Game.player.getPunkte());
+                System.out.printf("%nDein aktueller Punktestand ist %s.%n", Game.player.getPunkte());
             }
 
             // Attribute abfragen
@@ -40,7 +40,7 @@ public class Main {
             else if (input.equals("e")) {
                 if (Game.player.getHunger() < 10) {
                     Game.player.setHunger(Game.player.getHunger() + 1);
-                    System.out.printf("Danke für das Essen!%n");
+                    System.out.printf("%nDanke für das Essen!%n");
                     Thread.sleep(200);
                     System.out.printf("Meine Sättigung ist: %d%n", Game.player.getHunger());
                 }
@@ -49,9 +49,9 @@ public class Main {
                 }
             }
 
-            // Hungerlevel abfragen
+            // heilen
             else if (input.equals("h")) {
-                System.out.printf("%nMein Hungerlevel ist: %s%n", Game.player.getHunger());
+                Game.heal();
             }
 
             // trainieren
@@ -66,7 +66,7 @@ public class Main {
 
             // Debugmenü
             else if (input.equals("debug")) {
-                System.out.print("%nLade Debugmenü, bitte warten");
+                System.out.printf("%nLade Debugmenü, bitte warten");
                 Game.dotText();
                 Game.debugMenu();
             }
@@ -107,7 +107,7 @@ public class Main {
             // Alter tracken
             if (Game.player.getAge() > 9) {
                 Thread.sleep(1000);
-                System.out.printf("%nIch bin nun 10 Jahre alt, von nun an bin ich stark genug um mich selbst durchzuschlagen.%nVielen Dank für deine Hilfe!%n%n");
+                System.out.printf("%nIch bin nun 10 Jahre alt, von nun an bin ich stark genug, um mich selbst durchzuschlagen.%nVielen Dank für deine Hilfe!%n%n");
                 Thread.sleep(1000);
                 System.out.println("Du hast das Spiel gewonnen!");
                 Thread.sleep(200);

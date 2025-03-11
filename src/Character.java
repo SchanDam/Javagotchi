@@ -1,16 +1,20 @@
+import java.util.Random;
+
 public class Character {
 
     private int str;
     private int def;
     private int hp;
+    private int maxHp;
 
+    private int gold = 0;
     private int age = 1;
     private int hunger = 5;
     private int punkte = 0;
     private String name;
 
 
-    public Character(int getStr, int getDef, int getHp) {
+    public Character(int getStr, int getDef, int getHp, int getGold) {
         this.str = getStr;
         this.def = getDef;
         this.hp = getHp;
@@ -20,11 +24,12 @@ public class Character {
         this.str = getStr;
         this.def = getDef;
         this.hp = getHp;
+        this.maxHp = hp;
         this.name = name;
     }
 
     public void setStr(int str) {
-        this.str = str;
+        this.str = Math.min(255, str);
     }
 
     public int getStr() {
@@ -32,7 +37,7 @@ public class Character {
     }
 
     public void setDef(int def) {
-        this.def = def;
+        this.def = Math.min(255, def);
     }
 
     public int getDef() {
@@ -40,15 +45,15 @@ public class Character {
     }
 
     public void setHp(int hp) {
-        this.hp = hp;
+        this.hp = Math.min(9999, hp);
     }
 
     public int getHp() {
-        return hp;
+        return Math.max(0, hp);
     }
 
     public void setAge(int age) {
-        this.age = age;
+        this.age = Math.max(1, age);
     }
 
     public int getAge() {
@@ -56,7 +61,7 @@ public class Character {
     }
 
     public void setHunger(int hunger) {
-        this.hunger = hunger;
+        this.hunger = Math.min(255, hunger);
     }
 
     public int getHunger() {
@@ -64,7 +69,7 @@ public class Character {
     }
 
     public void setPunkte(int punkte) {
-        this.punkte = punkte;
+        this.punkte = Math.max(0, punkte);
     }
 
     public int getPunkte() {
@@ -79,23 +84,33 @@ public class Character {
         return name;
     }
 
-    public void attack(Character enemy) {
-            int damage = Math.max(0, this.str - enemy.getDef()); // Schaden berechnen
+    public int getGold() {
+        return gold;
+    }
 
-            System.out.println(this.name + " greift " + enemy.getName() + " an!");
-            System.out.println("Berechneter Schaden: " + damage);
+    public void setGold(int gold) {
+        this.gold = gold;
+    }
 
-            if (damage > 0) {
-                int newHp = Math.max(0, enemy.getHp() - damage); // Sicherstellen, dass HP nicht negativ wird
-                enemy.setHp(newHp);
-                System.out.println(enemy.getName() + " hat jetzt " + enemy.getHp() + " HP.");
-            } else {
-                System.out.println("Angriff zu schwach, kein Schaden verursacht.");
-            }
-        }
+    public int getMaxHp() {
+        return maxHp;
+    }
 
-        }
+    public void setMaxHp(int maxHp) {
+        this.maxHp = maxHp;
+    }
 
-//        int damage = Math.max(0, this.str - enemy.getDef());
-//        enemy.setHp(enemy.getHp() - damage);
+    public int calcDamage(Character enemy) {
+        Random rng = new Random();
 
+        int baseDamage = Math.max(0, this.str - enemy.getDef());
+        boolean isCritical = (rng.nextInt(100) < 10);
+        return isCritical ? baseDamage * 2 : baseDamage;
+    }
+
+    public int attack(Character enemy) {
+        int finalDamage = this.calcDamage(enemy);
+        enemy.setHp(enemy.getHp() - finalDamage);
+        return finalDamage;
+    }
+}

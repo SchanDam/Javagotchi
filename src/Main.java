@@ -6,48 +6,52 @@ public class Main {
     static String input;
 
     public static void main(String[] args) throws Exception {
+        boolean running = true;
 
-        Game.einleitung();
+//        Game.einleitung();
 
         // Funktionen
-        while (true) {
-            System.out.println("für Auflistung der Möglichkeiten Enter drücken");
+        while (running) {
+            System.out.printf("%n? für Menü%n");
             Thread.sleep(200);
-            System.out.println("Erwarte Eingabe:");
+            System.out.printf("Erwarte Eingabe:%n");
             input = sc.nextLine();
 
             // Programm beenden
             if (input.equals("q")) {
-                System.out.println("\nAuf wiedersehen! Bis bald!");
-                Thread.sleep(100);
-                System.out.println("Du hast " + Game.player.getPunkte() + " Punkte erreicht!");
+                System.out.printf("%nTschüss, Bis bald!%n");
+                Thread.sleep(200);
+                System.out.printf("Du hast %s Punkte erreicht!%n", Game.player.getPunkte());
+                Thread.sleep(500);
                 break;
             }
 
             // Punktestand abfragen
             else if (input.equals("p")) {
-                System.out.println("\ndein aktueller Punktestand ist " + Game.player.getPunkte() + ".\n");
+                System.out.printf("%ndein aktueller Punktestand ist %s.%n", Game.player.getPunkte());
             }
 
             // Attribute abfragen
             else if (input.equals("a")) {
-                Game.att();
+                Game.printAttributes();
             }
 
             // Essen
             else if (input.equals("e")) {
                 if (Game.player.getHunger() < 10) {
                     Game.player.setHunger(Game.player.getHunger() + 1);
-                    System.out.println("Danke für das Essen! Mein Hungerlevel ist: " + Game.player.getHunger() + "\n");
+                    System.out.printf("Danke für das Essen!%n");
+                    Thread.sleep(200);
+                    System.out.printf("Meine Sättigung ist: %d%n", Game.player.getHunger());
                 }
                 else {
-                    System.out.println("Ich bin satt\n");
+                    System.out.printf("Ich bin satt%n%n");
                 }
             }
 
             // Hungerlevel abfragen
             else if (input.equals("h")) {
-                System.out.println("\nMein Hungerlevel ist: " + Game.player.getHunger() + "\n");
+                System.out.printf("%nMein Hungerlevel ist: %s%n", Game.player.getHunger());
             }
 
             // trainieren
@@ -62,35 +66,29 @@ public class Main {
 
             // Debugmenü
             else if (input.equals("debug")) {
-                System.out.print("\nLade Debugmenü, bitte warten");
+                System.out.print("%nLade Debugmenü, bitte warten");
                 Game.dotText();
                 Game.debugMenu();
             }
 
             // Neustart
             else if (input.equals("n")) {
-                System.out.print("\nDas Spiel wird neu gestartet, resette Attribute");
-                Game.player.setStr(1);
-                Game.player.setDef(1);
-                Game.player.setHp(100);
-                Game.player.setAge(1);
-                Game.player.setPunkte(1);
-                Game.player.setHunger(5);
+                System.out.printf("%nDas Spiel wird neu gestartet, resette Attribute");
                 Game.dotText();
-                System.out.println("\n\n");
-                main(null);
+                Game.reset();
+                System.out.println();
+                continue;
             }
 
             // Auflisten
-            else if (input.isBlank()) {
+            else if (input.equals("?")) {
                 Game.mainMenu();
             }
 
             // falsche Taste
             else {
-                System.out.println("\nungültige Taste");
+                System.out.printf("%nungültige Taste%n");
                 Thread.sleep(200);
-                Game.mainMenu();
             }
 
             // Hunger tracken
@@ -98,23 +96,23 @@ public class Main {
                 Thread.sleep(1000);
                 System.out.print("Ich bin verhungert");
                 Game.dotText();
-                System.out.println("\nDas Spiel ist vorbei.\n");
+                System.out.printf("%nDas Spiel ist vorbei.%n");
                 Thread.sleep(1000);
                 ASCII.ritterTot();
                 Thread.sleep(200);
-                System.out.println("Du hast " + Game.player.getPunkte() + " Punkte erreicht!");
-                return;
+                System.out.printf("Du hast %s Punkte erreicht!", Game.player.getPunkte());
+                running = false;
             }
 
             // Alter tracken
             if (Game.player.getAge() > 9) {
                 Thread.sleep(1000);
-                System.out.println("\nIch bin nun 10 Jahre alt, von nun an bin ich stark genug um mich selbst durchzuschlagen.\nVielen Dank für deine Hilfe!\n");
+                System.out.printf("%nIch bin nun 10 Jahre alt, von nun an bin ich stark genug um mich selbst durchzuschlagen.%nVielen Dank für deine Hilfe!%n%n");
                 Thread.sleep(1000);
                 System.out.println("Du hast das Spiel gewonnen!");
                 Thread.sleep(200);
-                System.out.println("Du hast " + Game.player.getPunkte() + " Punkte erreicht!");
-                return;
+                System.out.printf("Du hast %s Punkte erreicht!", Game.player.getPunkte());
+                running = false;
             }
         }
     }

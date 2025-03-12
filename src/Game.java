@@ -5,10 +5,11 @@ public class Game {
     static Scanner sc = new Scanner(System.in);
     static Random rng = new Random();
 
-    static Character player = new Character(1, 1, 100, 1);
+    static Character player = new Character(1, 1, 100, 0);
     static Character enemyWeak = new Character("Skelett", 10, 5, 100);
     static Character enemyNormal = new Character("Oger", 25, 15, 200);
-    static Character enemyStrong = new Character("Drache", 50, 30, 500);
+    static Character enemyStrong = new Character("Drache", 35, 25, 300);
+    static Character enemyUnbeatable = new Character("Sephiroth", 177, 167, 3264);
 
     static String input;
 
@@ -39,7 +40,6 @@ public class Game {
                 player.setDef(255);
                 player.setHp(9999);
                 player.setHunger(255);
-
                 mainMenu();
             }
 
@@ -267,7 +267,7 @@ public class Game {
 
         switch (input) {
             case "1" -> {
-                System.out.printf("%s ausgewählt, starte Kampf", enemyWeak.getName());
+                System.out.printf("%n%s ausgewählt, starte Kampf", enemyWeak.getName());
                 dotText();
                 System.out.printf("%nKampf beginnt gegen %s\n", enemyWeak.getName());
                 Thread.sleep(500);
@@ -287,8 +287,26 @@ public class Game {
                         player.setPunkte(player.getPunkte() + 100);
                         return;
                     }
+                    if (player.getHp() > 1) {
+                        System.out.printf("%n**Nächste Runde**%n");
+                        Thread.sleep(500);
+                        System.out.println("Was soll ich tun?");
+                        Thread.sleep(200);
+                        System.out.println("\"1\" für angreifen");
+                        System.out.println("\"2\" für blocken");
+                        System.out.println("\"3\" für flüchten");
+                        input = sc.nextLine();
+
+                        switch (input) {
+                            case "1" -> {
+                            }
+                            case "2" -> {
+                                enemyWeak.calcDamage(/2);
+                            }
+                        }
+                    }
                     enemyWeak.attack(player);
-                    System.out.printf("%s greift dich an und verursacht %s Schaden.%n", enemyWeak.getName(), enemyWeak.calcDamage(player));
+                    System.out.printf("%n%s greift dich an und verursacht %s Schaden.%n", enemyWeak.getName(), enemyWeak.calcDamage(player));
                     Thread.sleep(500);
                     System.out.printf("Deine Lebenspunkte: %s%n", player.getHp());
 
@@ -302,7 +320,7 @@ public class Game {
                 }
             }
             case "2" -> {
-                System.out.printf("%s ausgewählt, starte Kampf", enemyNormal.getName());
+                System.out.printf("%n%s ausgewählt, starte Kampf", enemyNormal.getName());
                 dotText();
                 System.out.printf("%nKampf beginnt gegen %s%n", enemyNormal.getName());
                 Thread.sleep(500);
@@ -323,7 +341,7 @@ public class Game {
                         return;
                     }
                     enemyNormal.attack(player);
-                    System.out.printf("%s greift dich an und verursacht %s Schaden.%n", enemyNormal.getName(), enemyNormal.calcDamage(player));
+                    System.out.printf("%n%s greift dich an und verursacht %s Schaden.%n", enemyNormal.getName(), enemyNormal.calcDamage(player));
                     Thread.sleep(500);
                     System.out.printf("Deine Lebenspunkte: %s%n", player.getHp());
 
@@ -337,7 +355,7 @@ public class Game {
                 }
             }
             case "3" -> {
-                System.out.printf("%s ausgewählt, starte Kampf", enemyStrong.getName());
+                System.out.printf("%n%s ausgewählt, starte Kampf", enemyStrong.getName());
                 dotText();
                 System.out.printf("%nKampf beginnt gegen %s%n", enemyStrong.getName());
                 Thread.sleep(500);
@@ -358,7 +376,7 @@ public class Game {
                         return;
                     }
                     enemyStrong.attack(player);
-                    System.out.printf("%s greift dich an und verursacht %s Schaden.%n", enemyStrong.getName(), enemyStrong.calcDamage(player));
+                    System.out.printf("%n%s greift dich an und verursacht %s Schaden.%n", enemyStrong.getName(), enemyStrong.calcDamage(player));
                     Thread.sleep(500);
                     System.out.printf("Deine Lebenspunkte: %s%n", player.getHp());
 

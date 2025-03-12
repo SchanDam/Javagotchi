@@ -106,9 +106,8 @@ public class Character {
         return isCritical ? baseDamage * 2 : baseDamage;
     }
 
-    public int attack(Character enemy) {
+    public void attack(Character enemy) {
         int finalDamage = this.calcDamage(enemy);
         enemy.setHp(enemy.getHp() - finalDamage);
-        return finalDamage;
     }
 }

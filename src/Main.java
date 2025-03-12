@@ -10,7 +10,6 @@ public class Main {
 
         Game.einleitung();
 
-        // Funktionen
         while (running) {
             System.out.printf("%n? für Menüanzeige%n");
             Thread.sleep(200);
@@ -97,9 +96,9 @@ public class Main {
                 System.out.print("Ich bin verhungert");
                 Game.dotText();
                 System.out.printf("%nDas Spiel ist vorbei.%n");
-                Thread.sleep(1000);
+                Thread.sleep(500);
                 ASCII.ritterTot();
-                Thread.sleep(200);
+                Thread.sleep(1000);
                 System.out.printf("Du hast %s Punkte erreicht!", Game.player.getPunkte());
                 running = false;
             }

@@ -299,11 +299,12 @@ public class Game {
 
                         switch (input) {
                             case "1" -> {}
-                            case "2" -> enemyWeak.block(player);
+                            case "2" -> enemyWeak.block();
+                            case "3" -> Character.escape = true;
                         }
                     }
                     enemyWeak.attack(player);
-                    System.out.printf("%n%s greift dich an und verursacht %s Schaden.%n", enemyWeak.getName(), enemyWeak.getFinalDamage());
+                    System.out.printf("%n%s greift dich an und verursacht %s Schaden. %s%n", enemyWeak.getName(), enemyWeak.getFinalDamage(), Character.showCritString());
                     Thread.sleep(500);
                     System.out.printf("Deine Lebenspunkte: %s%n", player.getHp());
 

@@ -298,15 +298,12 @@ public class Game {
                         input = sc.nextLine();
 
                         switch (input) {
-                            case "1" -> {
-                            }
-                            case "2" -> {
-                                enemyWeak.calcDamage(/2);
-                            }
+                            case "1" -> {}
+                            case "2" -> enemyWeak.block(player);
                         }
                     }
                     enemyWeak.attack(player);
-                    System.out.printf("%n%s greift dich an und verursacht %s Schaden.%n", enemyWeak.getName(), enemyWeak.calcDamage(player));
+                    System.out.printf("%n%s greift dich an und verursacht %s Schaden.%n", enemyWeak.getName(), enemyWeak.getFinalDamage());
                     Thread.sleep(500);
                     System.out.printf("Deine Lebenspunkte: %s%n", player.getHp());
 

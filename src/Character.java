@@ -13,6 +13,8 @@ public class Character {
     private int punkte = 0;
     private String name;
 
+    private boolean block = false;
+    private int finalDamage;
 
     public Character(int getStr, int getDef, int getHp, int getGold) {
         this.str = getStr;
@@ -98,16 +100,35 @@ public class Character {
         return maxHp;
     }
 
+    public int getFinalDamage() {
+        return finalDamage;
+    }
+
     public int calcDamage(Character enemy) {
         Random rng = new Random();
 
-        int baseDamage = Math.max(0, this.str - enemy.getDef());
-        boolean isCritical = (rng.nextInt(100) < 10);
-        return isCritical ? baseDamage * 2 : baseDamage;
+        if (block == false) {
+            int baseDamage = Math.max(0, this.str - enemy.getDef());
+            boolean isCritical = (rng.nextInt(100) < 10);
+            return isCritical ? baseDamage * 2 / 2 : baseDamage / 2;
+        }
+        else if (block == true){
+            int baseDamage = Math.max(0, this.str - enemy.getDef());
+            boolean isCritical = (rng.nextInt(100) < 10);
+            block = false;
+            //isCritical ? baseDamage * 2 / 2 :
+            return baseDamage / 2;
+        }
+        return 0;
     }
 
-    public void attack(Character enemy) {
-        int finalDamage = this.calcDamage(enemy);
+    public int attack(Character enemy) {
+        finalDamage = this.calcDamage(enemy);
         enemy.setHp(enemy.getHp() - finalDamage);
+        return finalDamage;
+    }
+
+    public void block(Character enemy) {
+        block = true;
     }
 }

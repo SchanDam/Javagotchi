@@ -1,7 +1,7 @@
 import java.util.Random;
 
 public class Character {
-    static Random rng = new Random();
+    private Random rng = new Random();
 
     private int str;
     private int def;
@@ -123,6 +123,7 @@ public class Character {
             return 0;
         } else if (escape == true) {
             escapeFight();
+
         }
         return 0;
     }

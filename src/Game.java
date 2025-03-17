@@ -303,6 +303,7 @@ public class Game {
                             case "3" -> Character.escape = true;
                         }
                     }
+
                     enemyWeak.attack(player);
                     System.out.printf("%n%s greift dich an und verursacht %s Schaden. %s%n", enemyWeak.getName(), enemyWeak.getFinalDamage(), Character.showCritString());
                     Thread.sleep(500);

@@ -337,7 +337,6 @@ public class Game {
                         System.out.println("\"3\" für flüchten");
                         input = sc.nextLine();
                         System.out.println();
-                        player.resetBlock();
                         Thread.sleep(500);
 
                         switch (input) {
@@ -350,6 +349,7 @@ public class Game {
                                 }
                             }
                         }
+                        player.resetBlock();
                     }
                     if (player.getHp() <= 0) {
                         System.out.println("%nDu wurdest besiegt!%n");

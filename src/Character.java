@@ -120,69 +120,64 @@ public class Character {
         if (escape == true) {
             escapeFight();
             return 0;
-        }
-        else if (escape == false && this.block == true) {
+        } else if (enemy.isBlock()) {
             int baseDamage = Math.max(0, this.str - enemy.getDef());
             isCritical = (rng.nextInt(100) < 15);
             return isCritical ? baseDamage * 2 / 2 : baseDamage / 2;
-        }
-        else {
+        } else {
             int baseDamage = Math.max(0, this.str - enemy.getDef());
             isCritical = (rng.nextInt(100) < 15);
-            return isCritical ? baseDamage * 2: baseDamage;
+            return isCritical ? baseDamage * 2 : baseDamage;
         }
     }
 
-    public void attack(Character enemy) {
-        if (running == false) return;
+        public void attack (Character enemy){
+            if (running == false) return;
 
-        this.finalDamage = calcDamage(enemy);
-        enemy.setHp(enemy.getHp() - this.finalDamage);
-    }
+            this.finalDamage = calcDamage(enemy);
+            enemy.setHp(enemy.getHp() - this.finalDamage);
+        }
 
-    public void block() {
-        this.block = true;
-    }
-    public void resetBlock() {
-        this.block = false;
-    }
 
-    public void escapeFight() {
-        escape = true;
-        if (escape == true) {
-            boolean escapeChance = (rng.nextInt(100) < 80);
+        public void block () {
+            this.block = true;
+        }
+        public void resetBlock () {
+            this.block = false;
+        }
 
-            if (escapeChance == true) {
-                System.out.println("Du bist geflüchtet");
-                output.playSound("escape.wav");
-                Game.running = false;
-            }
-            else {
-                System.out.println("Du konntest nicht flüchten");
+        public void escapeFight () {
+            escape = true;
+            if (escape == true) {
+                boolean escapeChance = (rng.nextInt(100) < 80);
+
+                if (escapeChance == true) {
+                    System.out.println("Du bist geflüchtet");
+                    output.playSound("escape.wav");
+                    Game.running = false;
+                } else {
+                    System.out.println("Du konntest nicht flüchten");
                     output.playSound("inputFail.wav");
+                }
+                escape = false;
+                running = true;
             }
-            escape = false;
-            running = true;
         }
-    }
 
-    public static String showCritAndHitSound(Character enemy) {
-        if (enemy == Game.player && isCritical == true) {
-            output.playSound("cloudCrit.wav");
-            return "*kritischer Treffer!*";
-        }
-        else if (enemy == Game.player) {
-            output.playSound("cloudHit.wav");
-            return"";
-        }
-        else if (enemy == Game.enemyWeak && isCritical == true) {
-            output.playSound("normalHit.wav");
-            return "*kritischer Treffer!*";
-        }
-        else if (enemy == Game.enemyWeak) {
-            output.playSound("normalHit.wav");
+        public static String showCritAndHitSound (Character enemy){
+            if (enemy == Game.player && isCritical == true) {
+                output.playSound("cloudCrit.wav");
+                return "*kritischer Treffer!*";
+            } else if (enemy == Game.player) {
+                output.playSound("cloudHit.wav");
+                return "";
+            } else if (enemy == Game.enemyWeak && isCritical == true) {
+                output.playSound("normalHit.wav");
+                return "*kritischer Treffer!*";
+            } else if (enemy == Game.enemyWeak) {
+                output.playSound("normalHit.wav");
+                return "";
+            }
             return "";
         }
-        return "";
     }
-}

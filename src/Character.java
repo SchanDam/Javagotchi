@@ -1,23 +1,24 @@
 import java.util.Random;
 
 public class Character {
-    private Random rng = new Random();
+    static Random rng = new Random();
 
     private int str;
     private int def;
     private int hp;
     private int maxHp;
 
-    private int gold = 0;
+    private int gold = 5;
     private int age = 1;
     private int hunger = 5;
     private int punkte = 0;
     private String name;
 
     private boolean block = false;
-    static boolean isCritical = false;
+    private static boolean isCritical;
     static boolean escape = false;
     private int finalDamage;
+    static boolean running = true;
 
     public Character(int getStr, int getDef, int getHp, int getGold) {
         this.str = getStr;
@@ -107,52 +108,66 @@ public class Character {
         return finalDamage;
     }
 
+    public boolean getIsCritical() {
+        return isCritical;
+    }
+
     public int calcDamage(Character enemy) {
 
-        if (escape == false) {
-            if (block == false) {
-                int baseDamage = Math.max(0, this.str - enemy.getDef());
-                boolean isCritical = (rng.nextInt(100) < 10);
-                return isCritical ? baseDamage * 2 : baseDamage;
-            } else if (block == true) {
-                int baseDamage = Math.max(0, this.str - enemy.getDef());
-                isCritical = (rng.nextInt(100) < 10);
-                block = false;
-                return isCritical ? baseDamage * 2 / 2 : baseDamage / 2;
-            }
-            return 0;
-        } else if (escape == true) {
-            escapeFight();
+        while (running == true) {
 
+            if (escape == false) {
+                if (block == false) {
+                    int baseDamage = Math.max(0, this.str - enemy.getDef());
+                    isCritical = (rng.nextInt(100) < 10);
+                    return isCritical ? baseDamage * 2 : baseDamage;
+                }
+                else if (block == true) {
+                    int baseDamage = Math.max(0, this.str - enemy.getDef());
+                    isCritical = (rng.nextInt(100) < 10);
+                    block = false;
+                    return isCritical ? baseDamage * 2 / 2 : baseDamage / 2;
+                }
+                return 0;
+            }
+            else if (escape == true) {
+                escapeFight();
+                return 0;
+            }
         }
         return 0;
     }
 
     public void attack(Character enemy) {
+        if (running == false) return;
+
         finalDamage = this.calcDamage(enemy);
         enemy.setHp(enemy.getHp() - finalDamage);
     }
 
-    public void block() {
-        block = true;
-    }
-
-    public static String showCritString() {
-        if (isCritical) {
-            return "*kritischer Treffer!*";
-        }
-        return "";
-    }
-
     public void escapeFight() {
         if (escape == true) {
-            boolean escapeChance = (rng.nextInt (100) < 70);
+            boolean escapeChance = (rng.nextInt(100) < 70);
+
             if (escapeChance == true) {
                 System.out.println("Du bist geflüchtet");
+                escape = false;
+                running = false;
+                Game.running = false;
             }
             else {
                 System.out.println("Du konntest nicht flüchten");
+                escape = false;
             }
         }
+    }
+    public void block() {
+        block = true;
+    }
+    public static String showCritString() {
+        if (isCritical == true) {
+            return " *kritischer Treffer!*";
+        }
+        return "";
     }
 }

@@ -4,6 +4,7 @@ import java.util.Random;
 public class Game {
     static Scanner sc = new Scanner(System.in);
     static Random rng = new Random();
+    static Sounds output = new Sounds();
 
     static Character player = new Character(1, 1, 100, 0);
     static Character enemyWeak = new Character("Skelett", 10, 5, 100);
@@ -12,6 +13,7 @@ public class Game {
     static Character enemyUnbeatable = new Character("Sephiroth", 177, 167, 3264);
 
     static String input;
+    static boolean running = true;
 
     // Einleitung
     public static void einleitung() throws InterruptedException {
@@ -263,6 +265,7 @@ public class Game {
         System.out.println("\"3\" für Drache");
         Thread.sleep(500);
         System.out.printf("\"q\" zurück in Hauptmenü%n");
+        running = true;
         input = sc.nextLine();
 
         switch (input) {
@@ -272,16 +275,24 @@ public class Game {
                 System.out.printf("%nKampf beginnt gegen %s\n", enemyWeak.getName());
                 Thread.sleep(500);
 
-                while (true) {
+                while (running == true) {
 
                     player.attack(enemyWeak);
-                    System.out.printf("%nDu greifst %s an und verursacht %s Schaden.%n", enemyWeak.getName(), player.calcDamage(enemyWeak));
+                    System.out.printf("%nDu greifst %s an und verursacht %s Schaden.%s%n", enemyWeak.getName(), player.calcDamage(enemyWeak), Character.showCritString());
+                    Thread.sleep(500);
+                    output.playSound("cloud.wav");
                     Thread.sleep(500);
                     System.out.printf("Verbleibende Lebenspunkte von %s: %s%n", enemyWeak.getName(), enemyWeak.getHp());
+                    Thread.sleep(500);
+                    enemyWeak.attack(player);
+                    System.out.printf("%n%s greift dich an und verursacht %s Schaden. %s%n", enemyWeak.getName(), enemyWeak.getFinalDamage(), Character.showCritString());
+                    Thread.sleep(500);
+                    System.out.printf("Deine Lebenspunkte: %s%n", player.getHp());
 
                     if (enemyWeak.getHp() <= 0) {
                         System.out.printf("%s wurde besiegt!%n%n", enemyWeak.getName());
                         Thread.sleep(200);
+
                         System.out.println("Du hast 10 Gold und 100 Punkte erhalten!");
                         player.setGold(player.getGold() + 10);
                         player.setPunkte(player.getPunkte() + 100);
@@ -296,19 +307,21 @@ public class Game {
                         System.out.println("\"2\" für blocken");
                         System.out.println("\"3\" für flüchten");
                         input = sc.nextLine();
+                        System.out.printf("%n");
+                        Thread.sleep(500);
 
                         switch (input) {
                             case "1" -> {}
                             case "2" -> enemyWeak.block();
-                            case "3" -> Character.escape = true;
+                            case "3" -> {
+                                Character.escape = true;
+                                player.escapeFight();
+                                if (running == false) {
+                                    return;
+                                }
+                            }
                         }
                     }
-
-                    enemyWeak.attack(player);
-                    System.out.printf("%n%s greift dich an und verursacht %s Schaden. %s%n", enemyWeak.getName(), enemyWeak.getFinalDamage(), Character.showCritString());
-                    Thread.sleep(500);
-                    System.out.printf("Deine Lebenspunkte: %s%n", player.getHp());
-
                     if (player.getHp() <= 0) {
                         System.out.println("%nDu wurdest besiegt!%n");
                         Thread.sleep(500);
@@ -425,14 +438,14 @@ public class Game {
                 return;
             }
             else if (input.equals("nein")) {
-                System.out.printf("%nWer nicht will, der hat schon.%n");
-                Thread.sleep(500);
-                System.out.println("he! *Hexenlachen*");
-                Thread.sleep(500);
-                System.out.println("he! *Hexenlachen*");
-                Thread.sleep(500);
-                System.out.println("he! *Hexenlachen*");
-                Thread.sleep(1000);
+                System.out.printf("%nWer nicht will, der hat schon.%n%n");
+                output.playSoundAsync("laugh.wav");
+                for (int i = 0; i < 8; i++) {
+                    System.out.println("he!");
+                    Thread.sleep(300);
+                }
+                Thread.sleep(200);
+                clearScreen();
                 return;
             }
             else {
@@ -458,6 +471,13 @@ public class Game {
         for (int i = 0; i < 3; i++) {
             System.out.print(".");
             Thread.sleep(500);
+        }
+    }
+
+    // clear screen
+    public static void clearScreen() {
+        for (int i = 0; i < 50; i++) {
+            System.out.println();
         }
     }
 }

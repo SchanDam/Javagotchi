@@ -111,8 +111,8 @@ public class Character {
         return maxHp;
     }
 
-    public int getFinalDamage() {
-        return finalDamage;
+    public int getFinalDamage(Character enemy) {
+        return this.finalDamage;
     }
 
     public int calcDamage(Character enemy) {
@@ -123,20 +123,21 @@ public class Character {
         }
         else if (escape == false && this.block == true) {
             int baseDamage = Math.max(0, this.str - enemy.getDef());
-            isCritical = (rng.nextInt(100) < 10);
+            isCritical = (rng.nextInt(100) < 15);
             return isCritical ? baseDamage * 2 / 2 : baseDamage / 2;
         }
         else {
             int baseDamage = Math.max(0, this.str - enemy.getDef());
-            isCritical = (rng.nextInt(100) < 10);
+            isCritical = (rng.nextInt(100) < 15);
             return isCritical ? baseDamage * 2: baseDamage;
         }
     }
 
     public void attack(Character enemy) {
         if (running == false) return;
-        enemy.setHp(enemy.getHp() - calcDamage(enemy));
-        this.block = false;
+
+        this.finalDamage = calcDamage(enemy);
+        enemy.setHp(enemy.getHp() - this.finalDamage);
     }
 
     public void block() {
@@ -147,21 +148,21 @@ public class Character {
     }
 
     public void escapeFight() {
+        escape = true;
         if (escape == true) {
-            boolean escapeChance = (rng.nextInt(100) < 70);
+            boolean escapeChance = (rng.nextInt(100) < 80);
 
             if (escapeChance == true) {
                 System.out.println("Du bist geflüchtet");
                 output.playSound("escape.wav");
-                escape = false;
-                running = false;
                 Game.running = false;
             }
             else {
                 System.out.println("Du konntest nicht flüchten");
                     output.playSound("inputFail.wav");
-                    escape = false;
             }
+            escape = false;
+            running = true;
         }
     }
 

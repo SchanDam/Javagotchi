@@ -7,7 +7,7 @@ public class Game {
     static Random rng = new Random();
     static Sounds output = new Sounds();
 
-    static Character player = new Character(15, 5, 100, 5);
+    static Character player = new Character(50, 5, 100, 5);
     static Character enemyWeak = new Character("Skelett", 10, 5, 100);
     static Character enemyNormal = new Character("Oger", 25, 15, 200);
     static Character enemyStrong = new Character("Drache", 35, 25, 300);
@@ -270,20 +270,22 @@ public class Game {
     // Kampflogik
     public static void kampf() throws InterruptedException {
 
-        Utils.souf("%nGegen welchen Gegner soll %s kämpfen?%n", player.getName());
-        Thread.sleep(800);
+        System.out.printf("%nGegen welchen Gegner soll %s kämpfen?%n", player.getName());
+        //Thread.sleep(800);
         System.out.println("\"1\" für Skelett");
-        Thread.sleep(300);
+        //Thread.sleep(300);
         System.out.println("\"2\" für Oger");
-        Thread.sleep(300);
+        //Thread.sleep(300);
         System.out.println("\"3\" für Drache");
-        Thread.sleep(300);
+        //Thread.sleep(300);
         System.out.printf("\"q\" zurück in Hauptmenü%n");
+
         running = true;
         input = sc.nextLine();
 
         switch (input) {
             case "1" -> {
+
                 System.out.printf("%n%s ausgewählt, starte Kampf", enemyWeak.getName());
                 dotText();
                 System.out.printf("%nKampf beginnt gegen %s\n", enemyWeak.getName());
@@ -293,28 +295,22 @@ public class Game {
                 while (running == true) {
                     if (player.isBlock() == false) {
                         player.attack(enemyWeak);
-                        System.out.printf("%n%s greift %s an und verursacht %s Schaden. ", player.getName(), enemyWeak.getName(), player.calcDamage(enemyWeak));
+                        System.out.printf("%n%s greift %s an und verursacht %s Schaden. ", player.getName(), enemyWeak.getName(), player.getFinalDamage(enemyWeak));
                         Thread.sleep(100);
                         System.out.printf("%s%n", Character.showCritAndHitSound(player));
                         Thread.sleep(500);
                         System.out.printf("Verbleibende Lebenspunkte von %s: %s%n", enemyWeak.getName(), enemyWeak.getHp());
                         Thread.sleep(1500);
-                        enemyWeak.attack(player);
                     }
+
                     else if (player.isBlock() == true) {
                         System.out.println("der nächste Angriff wird geblockt");
                         player.resetBlock();
                         Thread.sleep(1500);
                     }
-                    System.out.printf("%n%s greift %s an und verursacht %s Schaden. ", enemyWeak.getName(), player.getName(), enemyWeak.calcDamage(player));
-                    Thread.sleep(100);
-                    System.out.printf("%s%n", Character.showCritAndHitSound(enemyWeak));
-                    Thread.sleep(500);
-                    System.out.printf("%s's Lebenspunkte: %s%n", player.getName(), player.getHp());
-                    Thread.sleep(1500);
 
-                    if (enemyWeak.getHp() <= 0) {
-                        System.out.printf("%s wurde besiegt!%n%n", enemyWeak.getName());
+                    if (enemyWeak.getHp() < 1) {
+                        System.out.printf("%n%s wurde besiegt!%n%n", enemyWeak.getName());
                         output.playSound(SoundFiles.ENEMYDEADSHORT.getFileName());
                         Thread.sleep(200);
                         System.out.println("Du hast 10 Gold und 100 Punkte erhalten!");
@@ -322,6 +318,15 @@ public class Game {
                         player.setGold(player.getGold() + 10);
                         player.setPunkte(player.getPunkte() + 100);
                         return;
+                    }
+                    else {
+                        enemyWeak.attack(player);
+                        System.out.printf("%n%s greift %s an und verursacht %s Schaden. ", enemyWeak.getName(), player.getName(), enemyWeak.getFinalDamage(player));
+                        Thread.sleep(100);
+                        System.out.printf("%s%n", Character.showCritAndHitSound(enemyWeak));
+                        Thread.sleep(500);
+                        System.out.printf("%s's Lebenspunkte: %s%n", player.getName(), player.getHp());
+                        Thread.sleep(1500);
                     }
                     if (player.getHp() > 1) {
                         System.out.printf("%n**Nächste Runde**%n%n");
@@ -332,13 +337,13 @@ public class Game {
                         System.out.println("\"3\" für flüchten");
                         input = sc.nextLine();
                         System.out.println();
+                        player.resetBlock();
                         Thread.sleep(500);
 
                         switch (input) {
                             case "1" -> {}
                             case "2" -> player.block();
                             case "3" -> {
-                                Character.escape = true;
                                 player.escapeFight();
                                 if (running == false) {
                                     return;

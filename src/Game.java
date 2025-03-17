@@ -43,7 +43,7 @@ public class Game {
                 player.setDef(255);
                 player.setHp(9999);
                 player.setHunger(255);
-                mainMenu();
+                //mainMenu();
             }
 
             // Twigolu
@@ -270,14 +270,14 @@ public class Game {
     // Kampflogik
     public static void kampf() throws InterruptedException {
 
-        System.out.printf("%nGegen welchen Gegner möchtest du kämpfen?%n%n");
-        Thread.sleep(1000);
+        Utils.souf("%nGegen welchen Gegner soll %s kämpfen?%n%n", player.getName());
+        Thread.sleep(800);
         System.out.println("\"1\" für Skelett");
-        Thread.sleep(500);
+        Thread.sleep(300);
         System.out.println("\"2\" für Oger");
-        Thread.sleep(500);
+        Thread.sleep(300);
         System.out.println("\"3\" für Drache");
-        Thread.sleep(500);
+        Thread.sleep(300);
         System.out.printf("\"q\" zurück in Hauptmenü%n");
         running = true;
         input = sc.nextLine();
@@ -287,41 +287,46 @@ public class Game {
                 System.out.printf("%n%s ausgewählt, starte Kampf", enemyWeak.getName());
                 dotText();
                 System.out.printf("%nKampf beginnt gegen %s\n", enemyWeak.getName());
+                output.playSound(SoundFiles.STARTFIGHT.getFileName());
                 Thread.sleep(500);
 
                 while (running == true) {
 
                     player.attack(enemyWeak);
-                    System.out.printf("%nDu greifst %s an und verursacht %s Schaden.%s%n", enemyWeak.getName(), player.calcDamage(enemyWeak), Character.showCritString());
-                    Thread.sleep(500);
-                    output.playSound("cloud.wav");
+                    System.out.printf("%n%s greift %s an und verursacht %s Schaden. ", player.getName(), enemyWeak.getName(), player.calcDamage(enemyWeak));
+                    Thread.sleep(100);
+                    System.out.printf("%s%n", Character.showCritAndHitSound(player));
                     Thread.sleep(500);
                     System.out.printf("Verbleibende Lebenspunkte von %s: %s%n", enemyWeak.getName(), enemyWeak.getHp());
-                    Thread.sleep(500);
+                    Thread.sleep(1500);
                     enemyWeak.attack(player);
-                    System.out.printf("%n%s greift dich an und verursacht %s Schaden. %s%n", enemyWeak.getName(), enemyWeak.getFinalDamage(), Character.showCritString());
+                    System.out.printf("%n%s greift %s an und verursacht %s Schaden. ", enemyWeak.getName(), player.getName(), enemyWeak.getFinalDamage());
+                    Thread.sleep(100);
+                    System.out.printf("%s%n", Character.showCritAndHitSound(enemyWeak));
                     Thread.sleep(500);
-                    System.out.printf("Deine Lebenspunkte: %s%n", player.getHp());
+                    System.out.printf("%s's Lebenspunkte: %s%n", player.getName(), player.getHp());
+                    Thread.sleep(1000);
 
                     if (enemyWeak.getHp() <= 0) {
                         System.out.printf("%s wurde besiegt!%n%n", enemyWeak.getName());
+                        output.playSound(SoundFiles.ENEMYDEADSHORT.getFileName());
                         Thread.sleep(200);
-
                         System.out.println("Du hast 10 Gold und 100 Punkte erhalten!");
+                        output.playSound(SoundFiles.GETCOIN.getFileName());
                         player.setGold(player.getGold() + 10);
                         player.setPunkte(player.getPunkte() + 100);
                         return;
                     }
                     if (player.getHp() > 1) {
-                        System.out.printf("%n**Nächste Runde**%n");
-                        Thread.sleep(500);
-                        System.out.println("Was soll ich tun?");
+                        System.out.printf("%n**Nächste Runde**%n%n");
+                        Thread.sleep(100);
+                        output.playSound(SoundFiles.NEXTROUND.getFileName());
                         Thread.sleep(200);
                         System.out.println("\"1\" für angreifen");
                         System.out.println("\"2\" für blocken");
                         System.out.println("\"3\" für flüchten");
                         input = sc.nextLine();
-                        System.out.printf("%n");
+                        System.out.println();
                         Thread.sleep(500);
 
                         switch (input) {
@@ -360,8 +365,10 @@ public class Game {
 
                     if (enemyNormal.getHp() <= 0) {
                         System.out.printf("%s wurde besiegt!%n%n", enemyNormal.getName());
+                        output.playSound(SoundFiles.ENEMYDEADSHORT.getFileName());
                         Thread.sleep(200);
                         System.out.println("Du hast 20 Gold und 200 Punkte erhalten!");
+                        output.playSound(SoundFiles.GETCOIN.getFileName());
                         player.setGold(player.getGold() + 20);
                         player.setPunkte(player.getPunkte() + 200);
                         return;
@@ -395,8 +402,10 @@ public class Game {
 
                     if (enemyStrong.getHp() <= 0) {
                         System.out.printf("%s wurde besiegt!%n%n", enemyStrong.getName());
+                        output.playSound(SoundFiles.ENEMYDEADLONG.getFileName());
                         Thread.sleep(200);
                         System.out.println("Du hast 50 Gold und 500 Punkte erhalten!");
+                        output.playSound(SoundFiles.GETCOIN.getFileName());
                         player.setGold(player.getGold() + 50);
                         player.setPunkte(player.getPunkte() + 500);
                         return;
@@ -441,6 +450,7 @@ public class Game {
                     player.setGold(player.getGold() - 5);
                     Thread.sleep(200);
                     System.out.printf("%nDu hast dich vollständig geheilt!%n");
+                    output.playSound(SoundFiles.HEAL.getFileName());
                     Thread.sleep(500);
                     return;
                 }

@@ -3,6 +3,7 @@ import java.util.Random;
 @SuppressWarnings("PointlessBooleanExpression")
 public class Character {
     static Random rng = new Random();
+    static Sounds output = new Sounds();
 
     private int str;
     private int def;
@@ -144,22 +145,37 @@ public class Character {
 
             if (escapeChance == true) {
                 System.out.println("Du bist geflüchtet");
+                output.playSound("escape.wav");
                 escape = false;
                 running = false;
                 Game.running = false;
             }
             else {
                 System.out.println("Du konntest nicht flüchten");
-                escape = false;
+                    output.playSound("inputFail.wav");
+                    escape = false;
             }
         }
     }
     public void block() {
         block = true;
     }
-    public static String showCritString() {
-        if (isCritical == true) {
-            return " *kritischer Treffer!*";
+    public static String showCritAndHitSound(Character enemy) {
+        if (enemy == Game.player && isCritical == true) {
+            output.playSound("cloudCrit.wav");
+            return "*kritischer Treffer!*";
+        }
+        else if (enemy == Game.player) {
+            output.playSound("cloudHit.wav");
+            return"";
+        }
+        else if (enemy == Game.enemyWeak && isCritical == true) {
+            output.playSound("normalHit.wav");
+            return "*kritischer Treffer!*";
+        }
+        else if (enemy == Game.enemyWeak) {
+            output.playSound("normalHit.wav");
+            return "";
         }
         return "";
     }

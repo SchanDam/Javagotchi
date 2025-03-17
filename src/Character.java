@@ -11,7 +11,7 @@ public class Character {
     @SuppressWarnings("FieldMayBeFinal")
     private int maxHp;
 
-    private int gold = 5;
+    private int gold;
     private int age = 1;
     private int hunger = 5;
     private int punkte = 0;
@@ -103,6 +103,10 @@ public class Character {
         this.gold = gold;
     }
 
+    public boolean isBlock() {
+        return block;
+    }
+
     public int getMaxHp() {
         return maxHp;
     }
@@ -113,30 +117,33 @@ public class Character {
 
     public int calcDamage(Character enemy) {
 
-            if (escape == false) {
-                if (block == false) {
-                    int baseDamage = Math.max(0, this.str - enemy.getDef());
-                    isCritical = (rng.nextInt(100) < 10);
-                    return isCritical ? baseDamage * 2 : baseDamage;
-                }
-                else {
-                    int baseDamage = Math.max(0, this.str - enemy.getDef());
-                    isCritical = (rng.nextInt(100) < 10);
-                    block = false;
-                    return isCritical ? baseDamage * 2 / 2 : baseDamage / 2;
-                }
-            }
-            else {
-                escapeFight();
-                return 0;
-            }
+        if (escape == true) {
+            escapeFight();
+            return 0;
+        }
+        else if (escape == false && this.block == true) {
+            int baseDamage = Math.max(0, this.str - enemy.getDef());
+            isCritical = (rng.nextInt(100) < 10);
+            return isCritical ? baseDamage * 2 / 2 : baseDamage / 2;
+        }
+        else {
+            int baseDamage = Math.max(0, this.str - enemy.getDef());
+            isCritical = (rng.nextInt(100) < 10);
+            return isCritical ? baseDamage * 2: baseDamage;
+        }
     }
 
     public void attack(Character enemy) {
         if (running == false) return;
+        enemy.setHp(enemy.getHp() - calcDamage(enemy));
+        this.block = false;
+    }
 
-        finalDamage = this.calcDamage(enemy);
-        enemy.setHp(enemy.getHp() - finalDamage);
+    public void block() {
+        this.block = true;
+    }
+    public void resetBlock() {
+        this.block = false;
     }
 
     public void escapeFight() {
@@ -157,9 +164,7 @@ public class Character {
             }
         }
     }
-    public void block() {
-        block = true;
-    }
+
     public static String showCritAndHitSound(Character enemy) {
         if (enemy == Game.player && isCritical == true) {
             output.playSound("cloudCrit.wav");

@@ -1,6 +1,7 @@
 import java.util.Scanner;
 import java.util.Random;
 
+@SuppressWarnings("PointlessBooleanExpression")
 public class Game {
     static Scanner sc = new Scanner(System.in);
     static Random rng = new Random();
@@ -18,7 +19,7 @@ public class Game {
     // Einleitung
     public static void einleitung() throws InterruptedException {
 
-        System.out.printf("%nDas Ziel des Spiels ist es, den Drachen zu besiegen.%n");
+        Utils.souf("%nDas Ziel des Spiels ist es, den Drachen zu besiegen.%n");
         Thread.sleep(1000);
         System.out.println("Wie ist mein Name?");
         player.setName(sc.nextLine());
@@ -49,7 +50,7 @@ public class Game {
             case "Twigolu" -> {
                 System.out.printf("%nOh, ich heiße wohl wie deine Katzen?!%n%n");
                 Thread.sleep(1000);
-                ASCII.Katze();
+                ASCII.gatos();
                 Thread.sleep(1500);
                 System.out.printf("%nHallo! Ich bin ein Javagotchiritter und Ich heiße %s. Trainiere mich und koche für mich, damit ich stärker werde!%n%n%n", player.getName());
                 mainMenu();
@@ -59,9 +60,22 @@ public class Game {
             case "V" -> {
                 System.out.printf("Cyberpunk?%n%n");
                 Thread.sleep(1000);
-                ASCII.Cyberpunk();
+                ASCII.cyberpunk();
                 Thread.sleep(1500);
                 System.out.printf("%nHallo! Ich bin ein Javagotchiritter und Ich heiße %s. Trainiere mich und koche für mich, damit ich stärker werde!%n%n%n", player.getName());
+                mainMenu();
+            }
+
+            // Cloud
+            case "Cloud Strife" -> {
+                System.out.println("Eine gute Wahl! Das Bustersword wird jeden Gegner zerschmettern!");
+                Thread.sleep(1000);
+                ASCII.cloud();
+                Thread.sleep(1500);
+                System.out.println("Cloud hat gesteigerte Attribute:");
+                player.setStr(20);
+                player.setDef(16);
+                player.setHp(314);
                 mainMenu();
             }
             default -> {

@@ -1,11 +1,13 @@
 import java.util.Random;
 
+@SuppressWarnings("PointlessBooleanExpression")
 public class Character {
     static Random rng = new Random();
 
     private int str;
     private int def;
     private int hp;
+    @SuppressWarnings("FieldMayBeFinal")
     private int maxHp;
 
     private int gold = 5;
@@ -108,13 +110,7 @@ public class Character {
         return finalDamage;
     }
 
-    public boolean getIsCritical() {
-        return isCritical;
-    }
-
     public int calcDamage(Character enemy) {
-
-        while (running == true) {
 
             if (escape == false) {
                 if (block == false) {
@@ -122,20 +118,17 @@ public class Character {
                     isCritical = (rng.nextInt(100) < 10);
                     return isCritical ? baseDamage * 2 : baseDamage;
                 }
-                else if (block == true) {
+                else {
                     int baseDamage = Math.max(0, this.str - enemy.getDef());
                     isCritical = (rng.nextInt(100) < 10);
                     block = false;
                     return isCritical ? baseDamage * 2 / 2 : baseDamage / 2;
                 }
-                return 0;
             }
-            else if (escape == true) {
+            else {
                 escapeFight();
                 return 0;
             }
-        }
-        return 0;
     }
 
     public void attack(Character enemy) {

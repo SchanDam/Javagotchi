@@ -8,7 +8,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
         boolean running = true;
 
-        //Game.einleitung();
+        Game.einleitung();
 
         while (running) {
             System.out.printf("%n? für Menüanzeige%n");

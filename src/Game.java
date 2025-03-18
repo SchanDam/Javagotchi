@@ -269,7 +269,6 @@ public class Game {
 
     // Kampflogik
     public static void kampf() throws InterruptedException {
-
         System.out.printf("%nGegen welchen Gegner soll %s kämpfen?%n", player.getName());
         //Thread.sleep(800);
         System.out.println("\"1\" für Skelett");
@@ -280,19 +279,29 @@ public class Game {
         //Thread.sleep(300);
         System.out.printf("\"q\" zurück in Hauptmenü%n");
 
+        enemyWeak.setHp(enemyWeak.getMaxHp());
+        enemyNormal.setHp(enemyNormal.getMaxHp());
+        enemyStrong.setHp(enemyStrong.getMaxHp());
+        enemyUnbeatable.setHp(enemyUnbeatable.getMaxHp());
+
+        Character.escape = false;
         running = true;
         input = sc.nextLine();
 
         switch (input) {
             case "1" -> {
 
+                // Kampf startet
+                enemyWeak.setHp(100);
                 System.out.printf("%n%s ausgewählt, starte Kampf", enemyWeak.getName());
                 dotText();
                 System.out.printf("%nKampf beginnt gegen %s\n", enemyWeak.getName());
                 output.playSound(SoundFiles.STARTFIGHT.getFileName());
                 Thread.sleep(500);
 
+                // Angriff Spieler ⇒ Gegner
                 while (running == true) {
+
                     if (player.isBlock() == false) {
                         player.attack(enemyWeak);
                         System.out.printf("%n%s greift %s an und verursacht %s Schaden. ", player.getName(), enemyWeak.getName(), player.getFinalDamage(enemyWeak));
@@ -303,12 +312,13 @@ public class Game {
                         Thread.sleep(1500);
                     }
 
+                    // Angriff blocken
                     else if (player.isBlock() == true) {
                         System.out.println("der nächste Angriff wird geblockt");
-                        player.resetBlock();
                         Thread.sleep(1500);
                     }
 
+                    // Gegner besiegt
                     if (enemyWeak.getHp() < 1) {
                         System.out.printf("%n%s wurde besiegt!%n%n", enemyWeak.getName());
                         output.playSound(SoundFiles.ENEMYDEADSHORT.getFileName());
@@ -319,6 +329,8 @@ public class Game {
                         player.setPunkte(player.getPunkte() + 100);
                         return;
                     }
+
+                    // Angriff Gegner ⇒ Spieler
                     else {
                         enemyWeak.attack(player);
                         System.out.printf("%n%s greift %s an und verursacht %s Schaden. ", enemyWeak.getName(), player.getName(), enemyWeak.getFinalDamage(player));
@@ -328,6 +340,8 @@ public class Game {
                         System.out.printf("%s's Lebenspunkte: %s%n", player.getName(), player.getHp());
                         Thread.sleep(1500);
                     }
+
+                    // Auswahl nächste Runde
                     if (player.getHp() > 1) {
                         System.out.printf("%n**Nächste Runde**%n%n");
                         Thread.sleep(100);
@@ -341,7 +355,7 @@ public class Game {
 
                         switch (input) {
                             case "1" -> {}
-                            case "2" ->
+                            case "2" -> player.block();
                             case "3" -> {
                                 player.escapeFight();
                                 if (running == false) {
@@ -350,6 +364,8 @@ public class Game {
                             }
                         }
                     }
+
+                    // Spieler besiegt
                     if (player.getHp() <= 0) {
                         System.out.println("%nDu wurdest besiegt!%n");
                         Thread.sleep(500);

@@ -103,10 +103,6 @@ public class Character {
         this.gold = gold;
     }
 
-    public boolean isBlock() {
-        return block;
-    }
-
     public int getMaxHp() {
         return maxHp;
     }
@@ -115,57 +111,70 @@ public class Character {
         return this.finalDamage;
     }
 
-    public int calcDamage(Character enemy) {
+    public boolean isBlock() {
+        return block;
+    }
 
+    public int calcDamage(Character enemy) {
+        if (running == false) {
+            System.out.println("DEBUG: Etwas is schief gelaufen.");
+            return 0;
+        }
         if (escape == true) {
             escapeFight();
             return 0;
-        } else {
-            int baseDamage = Math.max(0, this.str - enemy.getDef());
-            isCritical = (rng.nextInt(100) < 15);
-            return isCritical ? baseDamage * 2 : baseDamage;
         }
+        int baseDamage = Math.max(0, this.str - enemy.getDef());
+        isCritical = (rng.nextInt(100) < 15);
+        finalDamage = isCritical ? baseDamage * 2 : baseDamage;
+
+        if (enemy.block == true) {
+            finalDamage /= 2;
+            enemy.block = false;
+            return finalDamage;
+        }
+        return finalDamage;
     }
 
-        public void attack (Character enemy){
-            if (running == false) return;
+    public void attack(Character enemy){
+        if (running == false || escape == true) return;
+        this.finalDamage = calcDamage(enemy);
+        enemy.setHp(enemy.getHp() - this.finalDamage);
+    }
 
-            this.finalDamage = calcDamage(enemy);
-            enemy.setHp(enemy.getHp() - this.finalDamage);
-        }
+    public void block() {
+        this.block = true;
+    }
 
-        public void escapeFight () {
-            escape = true;
-            if (escape == true) {
-                boolean escapeChance = (rng.nextInt(100) < 80);
+    public void escapeFight() {
+        boolean escapeChance = (rng.nextInt(100) < 80);
 
-                if (escapeChance == true) {
-                    System.out.println("Du bist geflüchtet");
-                    output.playSound("escape.wav");
-                    Game.running = false;
-                } else {
-                    System.out.println("Du konntest nicht flüchten");
-                    output.playSound("inputFail.wav");
-                }
+            if (escapeChance == true) {
+                System.out.println("Du bist geflüchtet");
+                output.playSound("escape.wav");
+                escape = true;
+                Game.running = false;
+            } else {
+                System.out.println("Du konntest nicht flüchten");
+                output.playSound("inputFail.wav");
                 escape = false;
-                running = true;
             }
         }
 
-        public static String showCritAndHitSound (Character enemy){
-            if (enemy == Game.player && isCritical == true) {
-                output.playSound("cloudCrit.wav");
-                return "*kritischer Treffer!*";
-            } else if (enemy == Game.player) {
-                output.playSound("cloudHit.wav");
-                return "";
-            } else if (enemy == Game.enemyWeak && isCritical == true) {
-                output.playSound("normalHit.wav");
-                return "*kritischer Treffer!*";
-            } else if (enemy == Game.enemyWeak) {
-                output.playSound("normalHit.wav");
-                return "";
-            }
+    public static String showCritAndHitSound (Character enemy) {
+        if (enemy == Game.player && isCritical == true) {
+            output.playSound("cloudCrit.wav");
+            return "*kritischer Treffer!*";
+        } else if (enemy == Game.player) {
+            output.playSound("cloudHit.wav");
+            return "";
+        } else if (enemy == Game.enemyWeak && isCritical == true) {
+            output.playSound("normalHit.wav");
+            return "*kritischer Treffer!*";
+        } else if (enemy == Game.enemyWeak) {
+            output.playSound("normalHit.wav");
             return "";
         }
+        return "";
     }
+}

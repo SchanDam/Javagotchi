@@ -341,7 +341,7 @@ public class Game {
 
                         switch (input) {
                             case "1" -> {}
-                            case "2" -> player.block();
+                            case "2" ->
                             case "3" -> {
                                 player.escapeFight();
                                 if (running == false) {
@@ -349,7 +349,6 @@ public class Game {
                                 }
                             }
                         }
-                        player.resetBlock();
                     }
                     if (player.getHp() <= 0) {
                         System.out.println("%nDu wurdest besiegt!%n");

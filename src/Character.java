@@ -120,10 +120,6 @@ public class Character {
         if (escape == true) {
             escapeFight();
             return 0;
-        } else if (enemy.isBlock()) {
-            int baseDamage = Math.max(0, this.str - enemy.getDef());
-            isCritical = (rng.nextInt(100) < 15);
-            return isCritical ? baseDamage * 2 / 2 : baseDamage / 2;
         } else {
             int baseDamage = Math.max(0, this.str - enemy.getDef());
             isCritical = (rng.nextInt(100) < 15);
@@ -136,14 +132,6 @@ public class Character {
 
             this.finalDamage = calcDamage(enemy);
             enemy.setHp(enemy.getHp() - this.finalDamage);
-        }
-
-
-        public void block () {
-            this.block = true;
-        }
-        public void resetBlock () {
-            this.block = false;
         }
 
         public void escapeFight () {

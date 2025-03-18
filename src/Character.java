@@ -17,11 +17,13 @@ public class Character {
     private int punkte = 0;
     private String name;
 
-    private boolean block = false;
-    private static boolean isCritical;
-    static boolean escape = false;
     private int finalDamage;
-    static boolean running = true;
+
+    private static boolean isCritical;
+    private boolean miss;
+    private boolean block = false;
+    private boolean escape = false;
+    private boolean running = true;
 
     public Character(int getStr, int getDef, int getHp, int getGold) {
         this.str = getStr;
@@ -115,38 +117,38 @@ public class Character {
         return block;
     }
 
-    public int calcDamage(Character enemy) {
-        if (running == false) {
-            System.out.println("DEBUG: Etwas is schief gelaufen.");
-            return 0;
-        }
+    public boolean isMiss() {
+        return miss;
+    }
+
+    public void setEscape(boolean escape) {
+        this.escape = escape;
+    }
+
+    public int calcDamage(Character enemy) throws InterruptedException {
         if (escape == true) {
             escapeFight();
             return 0;
         }
         int baseDamage = Math.max(0, this.str - enemy.getDef());
+//        miss = (rng.nextInt(100) < 100);
         isCritical = (rng.nextInt(100) < 15);
         finalDamage = isCritical ? baseDamage * 2 : baseDamage;
 
         if (enemy.block == true) {
             finalDamage /= 2;
             enemy.block = false;
-            return finalDamage;
         }
         return finalDamage;
     }
 
-    public void attack(Character enemy){
+    public void attack(Character enemy) throws InterruptedException {
         if (running == false || escape == true) return;
         this.finalDamage = calcDamage(enemy);
         enemy.setHp(enemy.getHp() - this.finalDamage);
     }
 
-    public void block() {
-        this.block = true;
-    }
-
-    public void escapeFight() {
+    public void escapeFight() throws InterruptedException {
         boolean escapeChance = (rng.nextInt(100) < 80);
 
             if (escapeChance == true) {
@@ -156,21 +158,26 @@ public class Character {
                 Game.running = false;
             } else {
                 System.out.println("Du konntest nicht flüchten");
+                Thread.sleep(200);
                 output.playSound("inputFail.wav");
                 escape = false;
             }
         }
 
+    public void block() {
+        this.block = true;
+    }
+
     public static String showCritAndHitSound (Character enemy) {
         if (enemy == Game.player && isCritical == true) {
             output.playSound("cloudCrit.wav");
-            return "*kritischer Treffer!*";
+            return "\u001B[31m*kritischer Treffer!*\u001B[0m";
         } else if (enemy == Game.player) {
             output.playSound("cloudHit.wav");
             return "";
         } else if (enemy == Game.enemyWeak && isCritical == true) {
             output.playSound("normalHit.wav");
-            return "*kritischer Treffer!*";
+            return "\u001B[31m*kritischer Treffer!*\u001B[0m";
         } else if (enemy == Game.enemyWeak) {
             output.playSound("normalHit.wav");
             return "";

@@ -4,9 +4,14 @@ import java.io.InputStream;
 
 public class Sounds {
 
+    private float volume = -10.0f; // Standard-Lautstärke (dB), 0.0f = Original, -20.0f = leiser
+
+    public void setVolume(float volume) {
+        this.volume = volume;
+    }
+
     public void playSound(String fileName) {
         try {
-            // Sound aus dem resources-Ordner laden
             InputStream audioSrc = getClass().getResourceAsStream("/sounds/" + fileName);
             if (audioSrc == null) {
                 throw new IllegalArgumentException("Datei nicht gefunden: " + fileName);
@@ -15,9 +20,11 @@ public class Sounds {
             AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioSrc);
             Clip clip = AudioSystem.getClip();
             clip.open(audioStream);
-            clip.start();
 
-            // Optional: Wartezeit, damit der Sound abgespielt wird
+            // Lautstärke anpassen
+            setClipVolume(clip, volume);
+
+            clip.start();
             Thread.sleep(clip.getMicrosecondLength() / 1000);
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException | InterruptedException e) {
             e.printStackTrace();
@@ -35,11 +42,19 @@ public class Sounds {
                 AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioSrc);
                 Clip clip = AudioSystem.getClip();
                 clip.open(audioStream);
-                clip.start();
 
+                // Lautstärke anpassen
+                setClipVolume(clip, volume);
+
+                clip.start();
             } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
                 e.printStackTrace();
             }
-        }).start(); // Neuer Thread, damit das Programm nicht wartet
+        }).start();
+    }
+
+    private void setClipVolume(Clip clip, float volume) {
+        FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+        gainControl.setValue(volume); // Negative Werte machen den Sound leiser
     }
 }

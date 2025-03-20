@@ -1,3 +1,9 @@
+import Characters.Player;
+import Characters.Skelett;
+import Characters.Oger;
+import Characters.Drache;
+import Characters.Sephiroth;
+
 import java.util.Scanner;
 import java.util.Random;
 
@@ -7,14 +13,17 @@ public class Game {
     static Random rng = new Random();
     static Sounds output = new Sounds();
 
-    static Character player = new Character(50, 5, 100, 5);
-    static Character enemyWeak = new Character("Skelett", 10, 5, 100);
-    static Character enemyNormal = new Character("Oger", 25, 15, 200);
-    static Character enemyStrong = new Character("Drache", 35, 25, 300);
-    static Character enemyUnbeatable = new Character("Sephiroth", 177, 167, 3264);
+    // Objekte
+    static Player player = new Player();
+    static Skelett skelett = new Skelett();
+    static Oger oger = new Oger();
+    static Drache drache = new Drache();
+    static Sephiroth sephiroth = new Sephiroth();
 
     static String input;
     static boolean running = true;
+
+    static Combatsys comSysInst = new Combatsys();
 
     // Einleitung
     public static void einleitung() throws InterruptedException {
@@ -24,9 +33,7 @@ public class Game {
         System.out.println("Wie ist mein Name?");
         player.setName(Utils.getSoundInput());
         Thread.sleep(1000);
-        System.out.println("\u001B[31mDas ist roter Text\u001B[0m");
-        System.out.println("\u001B[32mDas ist grüner Text\u001B[0m");
-        System.out.println("\u001B[34mDas ist blauer Text\u001B[0m");
+
         // Godmode
         switch (player.getName()) {
             case "Godmode" -> {
@@ -174,12 +181,12 @@ public class Game {
         //Thread.sleep(300);
         System.out.printf("\"q\" zurück in Hauptmenü%n");
 
-        enemyWeak.setHp(enemyWeak.getMaxHp());
-        enemyNormal.setHp(enemyNormal.getMaxHp());
-        enemyStrong.setHp(enemyStrong.getMaxHp());
-        enemyUnbeatable.setHp(enemyUnbeatable.getMaxHp());
+        skelett.setHp(skelett.getMaxHp());
+        oger.setHp(oger.getMaxHp());
+        drache.setHp(drache.getMaxHp());
+        sephiroth.setHp(sephiroth.getMaxHp());
 
-        player.setEscape(false);
+        comSysInst.setEscape(false);
         running = true;
         input = Utils.getSoundInput();
 
@@ -187,10 +194,10 @@ public class Game {
             case "1" -> {
 
                 // Kampf startet
-                enemyWeak.setHp(100);
-                System.out.printf("%n%s ausgewählt, starte Kampf", enemyWeak.getName());
+                skelett.setHp(100);
+                System.out.printf("%n%s ausgewählt, starte Kampf", skelett.getName());
                 Utils.dotText();
-                System.out.printf("%nKampf beginnt gegen %s\n", enemyWeak.getName());
+                System.out.printf("%nKampf beginnt gegen %s\n", skelett.getName());
                 output.playSound(SoundFiles.STARTFIGHT.getFileName());
                 Thread.sleep(500);
 
@@ -199,17 +206,17 @@ public class Game {
 
                     // Angriff Spieler ⇒ Gegner
                     if (player.isBlock() == false) {
-                        if (player.isMiss() == true) {
+                        if (comSysInst.isMiss() == true) {
                             System.out.printf("%nDer Angriff ging daneben.%n");
                             output.playSound(SoundFiles.ATTACKMISS.getFileName());
                         }
                         else {
-                            player.attack(enemyWeak);
-                            System.out.printf("%n%s greift %s an und verursacht %s Schaden. ", player.getName(), enemyWeak.getName(), player.getFinalDamage(enemyWeak));
+                            comSysInst.attack(skelett);
+                            System.out.printf("%n%s greift %s an und verursacht %s Schaden. ", player.getName(), skelett.getName(), comSysInst.getFinalDamage(skelett));
                             Thread.sleep(100);
-                            System.out.printf("%s%n", Character.showCritAndHitSound(player));
+                            System.out.printf("%s%n", Combatsys.showCritAndHitSound(player));
                             Thread.sleep(500);
-                            System.out.printf("Verbleibende Lebenspunkte von %s: %s%n", enemyWeak.getName(), enemyWeak.getHp());
+                            System.out.printf("Verbleibende Lebenspunkte von %s: %s%n", skelett.getName(), skelett.getHp());
                             Thread.sleep(1500);
                         }
                     }
@@ -221,8 +228,8 @@ public class Game {
                     }
 
                     // Gegner besiegt
-                    if (enemyWeak.getHp() < 1) {
-                        System.out.printf("%n%s wurde besiegt!%n%n", enemyWeak.getName());
+                    if (skelett.getHp() < 1) {
+                        System.out.printf("%n%s wurde besiegt!%n%n", skelett.getName());
                         output.playSound(SoundFiles.ENEMYDEADSHORT.getFileName());
                         Thread.sleep(200);
                         System.out.println("Du hast 10 Gold und 100 Punkte erhalten!");
@@ -234,15 +241,15 @@ public class Game {
 
                     // Angriff Gegner ⇒ Spieler
                     else {
-                        if (enemyWeak.isMiss() == true) {
+                        if (comSysInst.isMiss() == true) {
                             System.out.printf("%nDer Angriff ging daneben.%n");
                             output.playSound(SoundFiles.ATTACKMISS.getFileName());
                         }
                         else {
-                            enemyWeak.attack(player);
-                            System.out.printf("%n%s greift %s an und verursacht %s Schaden. ", enemyWeak.getName(), player.getName(), enemyWeak.getFinalDamage(player));
+                            comSysInst.attack(player);
+                            System.out.printf("%n%s greift %s an und verursacht %s Schaden. ", skelett.getName(), player.getName(), comSysInst.getFinalDamage(player));
                             Thread.sleep(100);
-                            System.out.printf("%s%n", Character.showCritAndHitSound(enemyWeak));
+                            System.out.printf("%s%n", Combatsys.showCritAndHitSound(skelett));
                             Thread.sleep(500);
                             System.out.printf("%s's Lebenspunkte: %s%n", player.getName(), player.getHp());
                             Thread.sleep(1500);
@@ -263,9 +270,9 @@ public class Game {
 
                         switch (input) {
                             case "1" -> {}
-                            case "2" -> player.block();
+                            case "2" -> player.block(true);
                             case "3" -> {
-                                player.escapeFight();
+                                comSysInst.escapeFight();
                                 if (running == false) {
                                     return;
                                 }
@@ -279,80 +286,6 @@ public class Game {
                         Thread.sleep(500);
                         System.out.println("Dein Sättigungslevel ist um 3 gesunken.");
                         player.setHunger(player.getHunger() - 3);
-                        return;
-                    }
-                }
-            }
-            case "2" -> {
-                System.out.printf("%n%s ausgewählt, starte Kampf", enemyNormal.getName());
-                Utils.dotText();
-                System.out.printf("%nKampf beginnt gegen %s%n", enemyNormal.getName());
-                Thread.sleep(500);
-
-                while (true) {
-
-                    player.attack(enemyNormal);
-                    System.out.printf("%nDu greifst %s an und verursacht %s Schaden.%n", enemyNormal.getName(), player.calcDamage(enemyNormal));
-                    Thread.sleep(500);
-                    System.out.printf("Verbleibende Lebenspunkte von %s: %s%n", enemyNormal.getName(), enemyNormal.getHp());
-
-                    if (enemyNormal.getHp() <= 0) {
-                        System.out.printf("%s wurde besiegt!%n%n", enemyNormal.getName());
-                        output.playSound(SoundFiles.ENEMYDEADSHORT.getFileName());
-                        Thread.sleep(200);
-                        System.out.println("Du hast 20 Gold und 200 Punkte erhalten!");
-                        output.playSound(SoundFiles.GETCOIN.getFileName());
-                        player.setGold(player.getGold() + 20);
-                        player.setPunkte(player.getPunkte() + 200);
-                        return;
-                    }
-                    enemyNormal.attack(player);
-                    System.out.printf("%n%s greift dich an und verursacht %s Schaden.%n", enemyNormal.getName(), enemyNormal.calcDamage(player));
-                    Thread.sleep(500);
-                    System.out.printf("Deine Lebenspunkte: %s%n", player.getHp());
-
-                    if (player.getHp() <= 0) {
-                        System.out.printf("%nDu wurdest besiegt!%n");
-                        Thread.sleep(500);
-                        System.out.println("Dein Sättigungslevel ist um 5 gesunken.");
-                        player.setHunger(player.getHunger() - 5);
-                        return;
-                    }
-                }
-            }
-            case "3" -> {
-                System.out.printf("%n%s ausgewählt, starte Kampf", enemyStrong.getName());
-                Utils.dotText();
-                System.out.printf("%nKampf beginnt gegen %s%n", enemyStrong.getName());
-                Thread.sleep(500);
-
-                while (true) {
-
-                    player.attack(enemyStrong);
-                    System.out.printf("%nDu greifst %s an und verursacht %s Schaden.%n", enemyStrong.getName(), player.calcDamage(enemyStrong));
-                    Thread.sleep(500);
-                    System.out.printf("Verbleibende Lebenspunkte von %s: %s%n", enemyStrong.getName(), enemyStrong.getHp());
-
-                    if (enemyStrong.getHp() <= 0) {
-                        System.out.printf("%s wurde besiegt!%n%n", enemyStrong.getName());
-                        output.playSound(SoundFiles.ENEMYDEADLONG.getFileName());
-                        Thread.sleep(200);
-                        System.out.println("Du hast 50 Gold und 500 Punkte erhalten!");
-                        output.playSound(SoundFiles.GETCOIN.getFileName());
-                        player.setGold(player.getGold() + 50);
-                        player.setPunkte(player.getPunkte() + 500);
-                        return;
-                    }
-                    enemyStrong.attack(player);
-                    System.out.printf("%n%s greift dich an und verursacht %s Schaden.%n", enemyStrong.getName(), enemyStrong.calcDamage(player));
-                    Thread.sleep(500);
-                    System.out.printf("Deine Lebenspunkte: %s%n", player.getHp());
-
-                    if (player.getHp() <= 0) {
-                        System.out.printf("%nDu wurdest besiegt!%n%n");
-                        Thread.sleep(500);
-                        System.out.println("Dein Sättigungslevel ist um 9 gesunken.");
-                        player.setHunger(player.getHunger() - 9);
                         return;
                     }
                 }
@@ -392,6 +325,7 @@ public class Game {
                 else {
                     Thread.sleep(200);
                     System.out.printf("%nDu hast nicht genug Gold zum heilen!%n");
+                    Thread.sleep(500);
                     Utils.laugh();
                     return;
                 }

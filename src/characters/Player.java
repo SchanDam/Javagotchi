@@ -1,4 +1,8 @@
-package Characters;
+package characters;
+import java.util.Random;
+import audio.Sounds;
+import audio.SoundFiles;
+
 
 public class Player extends Chars {
 
@@ -7,6 +11,10 @@ public class Player extends Chars {
     private int gold;
     private int punkte = 0;
     private boolean block = false;
+    private boolean escape = false;
+
+    Random rng = new Random();
+    Sounds output = new Sounds();
 
     public Player() {
         super("", 1, 1, 100);
@@ -46,5 +54,25 @@ public class Player extends Chars {
     }
     public int getPunkte() {
         return punkte;
+    }
+
+    public void setEscape(boolean escape) {
+        this.escape = escape;
+    }
+    public void escapeFight() throws InterruptedException {
+        boolean escapeChance = (rng.nextInt(100) < 80);
+
+
+        if (escapeChance == true) {
+            System.out.println("Du bist geflüchtet");
+            output.playSound(SoundFiles.ESCAPE.getFileName());
+            escape = true;
+            Game.running = false;
+        } else {
+            System.out.println("Du konntest nicht flüchten");
+            Thread.sleep(200);
+            output.playSound("inputFail.wav");
+            escape = false;
+        }
     }
 }

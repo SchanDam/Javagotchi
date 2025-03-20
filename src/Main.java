@@ -1,6 +1,10 @@
+import audio.SoundFiles;
+import audio.Sounds;
+
 public class Main {
-    static Sounds output = new Sounds();
+
     static String input;
+    static Sounds output = new Sounds();
 
     public static void main(String[] args) throws Exception {
         boolean running = true;
@@ -20,15 +24,7 @@ public class Main {
 
             // Essen
             else if (input.equals("e")) {
-                if (Game.player.getHunger() < 10) {
-                    Game.player.setHunger(Game.player.getHunger() + 1);
-                    System.out.printf("%nDanke für das Essen!%n");
-                    Thread.sleep(200);
-                    System.out.printf("Meine Sättigung ist: %d%n", Game.player.getHunger());
-                }
-                else {
-                    System.out.printf("Ich bin satt%n%n");
-                }
+                Game.eat();
             }
 
             // trainieren
@@ -38,7 +34,7 @@ public class Main {
 
             // kämpfen
             else if (input.equals("k")) {
-                Game.kampf();
+                Game.fight();
             }
 
             // heilen
@@ -53,10 +49,7 @@ public class Main {
 
             // Neustart
             else if (input.equals("n")) {
-                System.out.printf("%nDas Spiel wird neu gestartet, resette Attribute");
-                Utils.dotText();
-                Utils.reset();
-                System.out.println();
+                Game.reset();
                 continue;
             }
 

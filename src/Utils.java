@@ -1,3 +1,5 @@
+import audio.Sounds;
+
 import java.util.Random;
 import java.util.Scanner;
 

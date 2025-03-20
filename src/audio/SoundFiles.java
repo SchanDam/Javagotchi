@@ -1,3 +1,5 @@
+package audio;
+
 public enum SoundFiles {
     ATTACKMISS("attackMiss.wav"),
     CHOCOBO("chocobo.wav"),

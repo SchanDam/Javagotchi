@@ -1,32 +1,23 @@
-import Characters.Player;
-import Characters.Skelett;
-import Characters.Oger;
-import Characters.Drache;
-import Characters.Sephiroth;
+import audio.SoundFiles;
+import audio.Sounds;
+import characters.*;
 
 import java.util.Scanner;
 import java.util.Random;
 
-@SuppressWarnings("PointlessBooleanExpression")
 public class Game {
     static Scanner sc = new Scanner(System.in);
     static Random rng = new Random();
     static Sounds output = new Sounds();
+    static String input = Utils.getSoundInput();
 
-    // Objekte
-    static Player player = new Player();
-    static Skelett skelett = new Skelett();
-    static Oger oger = new Oger();
-    static Drache drache = new Drache();
-    static Sephiroth sephiroth = new Sephiroth();
-
-    static String input;
     static boolean running = true;
 
-    static Combatsys comSysInst = new Combatsys();
+    static Player player = new Player();
+    static Enemies enemy;
 
     // Einleitung
-    public static void einleitung() throws InterruptedException {
+    public static void introduce() throws InterruptedException {
 
         Utils.souf("%nDas Ziel des Spiels ist es, den Drachen zu besiegen.%n");
         Thread.sleep(1000);
@@ -138,6 +129,18 @@ public class Game {
         Thread.sleep(200);
     }
 
+    // essen
+    public static void eat() throws InterruptedException {
+        if (Game.player.getHunger() < 10) {
+            Game.player.setHunger(Game.player.getHunger() + 1);
+            System.out.printf("%nDanke für das Essen!%n");
+            Thread.sleep(200);
+            System.out.printf("Meine Sättigung ist: %d%n", Game.player.getHunger());
+        } else {
+            System.out.printf("Ich bin satt%n%n");
+        }
+    }
+
     // Training
     public static void training() throws InterruptedException {
         System.out.printf("%nIch muss meine Fähigkeiten mit Schwert und Schild trainieren!%n");
@@ -169,8 +172,8 @@ public class Game {
         System.out.printf("Ich bin hungrig! Neuer Sättigungswert: %d%n", player.getHunger());
     }
 
-    // Kampflogik
-    public static void kampf() throws InterruptedException {
+    // fight
+    public static void fight() throws InterruptedException {
         System.out.printf("%nGegen welchen Gegner soll %s kämpfen?%n", player.getName());
         //Thread.sleep(800);
         System.out.println("\"1\" für Skelett");
@@ -181,119 +184,21 @@ public class Game {
         //Thread.sleep(300);
         System.out.printf("\"q\" zurück in Hauptmenü%n");
 
-        skelett.setHp(skelett.getMaxHp());
-        oger.setHp(oger.getMaxHp());
-        drache.setHp(drache.getMaxHp());
-        sephiroth.setHp(sephiroth.getMaxHp());
-
-        comSysInst.setEscape(false);
+        enemy.setHp(enemy.getMaxHp());
         running = true;
-        input = Utils.getSoundInput();
+        player.setEscape(false);
 
         switch (input) {
-            case "1" -> {
-
-                // Kampf startet
-                skelett.setHp(100);
-                System.out.printf("%n%s ausgewählt, starte Kampf", skelett.getName());
-                Utils.dotText();
-                System.out.printf("%nKampf beginnt gegen %s\n", skelett.getName());
-                output.playSound(SoundFiles.STARTFIGHT.getFileName());
+            case "1" -> enemy = new Skelett();
+            case "2" -> enemy = new Oger();
+            case "3" -> enemy = new Drache();
+            case "Sephiroth" -> enemy = new Sephiroth();
+            default -> {
                 Thread.sleep(500);
-
-
-                while (running == true) {
-
-                    // Angriff Spieler ⇒ Gegner
-                    if (player.isBlock() == false) {
-                        if (comSysInst.isMiss() == true) {
-                            System.out.printf("%nDer Angriff ging daneben.%n");
-                            output.playSound(SoundFiles.ATTACKMISS.getFileName());
-                        }
-                        else {
-                            comSysInst.attack(skelett);
-                            System.out.printf("%n%s greift %s an und verursacht %s Schaden. ", player.getName(), skelett.getName(), comSysInst.getFinalDamage(skelett));
-                            Thread.sleep(100);
-                            System.out.printf("%s%n", Combatsys.showCritAndHitSound(player));
-                            Thread.sleep(500);
-                            System.out.printf("Verbleibende Lebenspunkte von %s: %s%n", skelett.getName(), skelett.getHp());
-                            Thread.sleep(1500);
-                        }
-                    }
-
-                    // Angriff blocken
-                    else if (player.isBlock() == true) {
-                        System.out.println("der nächste Angriff wird geblockt");
-                        Thread.sleep(1500);
-                    }
-
-                    // Gegner besiegt
-                    if (skelett.getHp() < 1) {
-                        System.out.printf("%n%s wurde besiegt!%n%n", skelett.getName());
-                        output.playSound(SoundFiles.ENEMYDEADSHORT.getFileName());
-                        Thread.sleep(200);
-                        System.out.println("Du hast 10 Gold und 100 Punkte erhalten!");
-                        output.playSound(SoundFiles.GETCOIN.getFileName());
-                        player.setGold(player.getGold() + 10);
-                        player.setPunkte(player.getPunkte() + 100);
-                        return;
-                    }
-
-                    // Angriff Gegner ⇒ Spieler
-                    else {
-                        if (comSysInst.isMiss() == true) {
-                            System.out.printf("%nDer Angriff ging daneben.%n");
-                            output.playSound(SoundFiles.ATTACKMISS.getFileName());
-                        }
-                        else {
-                            comSysInst.attack(player);
-                            System.out.printf("%n%s greift %s an und verursacht %s Schaden. ", skelett.getName(), player.getName(), comSysInst.getFinalDamage(player));
-                            Thread.sleep(100);
-                            System.out.printf("%s%n", Combatsys.showCritAndHitSound(skelett));
-                            Thread.sleep(500);
-                            System.out.printf("%s's Lebenspunkte: %s%n", player.getName(), player.getHp());
-                            Thread.sleep(1500);
-                        }
-                    }
-
-                    // Auswahl nächste Runde
-                    if (player.getHp() > 1) {
-                        System.out.printf("%n**Nächste Runde**%n%n");
-                        Thread.sleep(100);
-                        output.playSound(SoundFiles.NEXTROUND.getFileName());
-                        System.out.println("\"1\" für angreifen");
-                        System.out.println("\"2\" für blocken");
-                        System.out.println("\"3\" für flüchten");
-                        input = Utils.getSoundInput();
-                        System.out.println();
-                        Thread.sleep(500);
-
-                        switch (input) {
-                            case "1" -> {}
-                            case "2" -> player.block(true);
-                            case "3" -> {
-                                comSysInst.escapeFight();
-                                if (running == false) {
-                                    return;
-                                }
-                            }
-                        }
-                    }
-
-                    // Spieler besiegt
-                    if (player.getHp() <= 0) {
-                        System.out.println("%nDu wurdest besiegt!%n");
-                        Thread.sleep(500);
-                        System.out.println("Dein Sättigungslevel ist um 3 gesunken.");
-                        player.setHunger(player.getHunger() - 3);
-                        return;
-                    }
-                }
-            }
-            case "q" -> {
-                System.out.printf("%nIns Hauptmenü zurückkehren, bitte warten");
-                Utils.dotText();
-                System.out.println();
+                System.out.printf("%nungültige Taste%n");
+                output.playSound(SoundFiles.FAIL.getFileName());
+                Thread.sleep(300);
+                return;
             }
         }
     }
@@ -302,9 +207,9 @@ public class Game {
     public static void heal() throws InterruptedException {
         while (true) {
 
-        Thread.sleep(200);
-        System.out.printf("%nEin Heiltrank kostet 5 Goldstücke, soll %s einen Trank trinken? (\"ja\" oder \"nein\")%n", player.getName());
-        input = Utils.getSoundInput();
+            Thread.sleep(200);
+            System.out.printf("%nEin Heiltrank kostet 5 Goldstücke, soll %s einen Trank trinken? (\"ja\" oder \"nein\")%n", player.getName());
+            input = Utils.getSoundInput();
 
             if (input.equals("ja")) {
                 if (player.getHp() == player.getMaxHp() && player.getGold() > 4) {
@@ -312,8 +217,7 @@ public class Game {
                     System.out.printf("%nDu hast bereits volle Lebenspunkte.%n%n");
                     Utils.laugh();
                     return;
-                }
-                else if (player.getGold() > 4) {
+                } else if (player.getGold() > 4) {
                     player.setHp(player.getMaxHp());
                     player.setGold(player.getGold() - 5);
                     Thread.sleep(200);
@@ -321,27 +225,32 @@ public class Game {
                     output.playSound(SoundFiles.HEAL.getFileName());
                     Thread.sleep(500);
                     return;
-                }
-                else {
+                } else {
                     Thread.sleep(200);
                     System.out.printf("%nDu hast nicht genug Gold zum heilen!%n");
                     Thread.sleep(500);
                     Utils.laugh();
                     return;
                 }
-            }
-            else if (input.equals("nein")) {
+            } else if (input.equals("nein")) {
                 System.out.printf("%nWer nicht will, der hat schon.%n%n");
                 Utils.laugh();
                 return;
-            }
-            else {
+            } else {
                 Thread.sleep(500);
                 System.out.printf("%nungültige Taste%n");
                 output.playSound(SoundFiles.FAIL.getFileName());
                 Thread.sleep(300);
             }
         }
+    }
+
+    // Programmneustart
+    public static void reset() throws InterruptedException {
+        System.out.printf("%nDas Spiel wird neu gestartet, resette Attribute");
+        Utils.dotText();
+        Utils.reset();
+        System.out.println();
     }
 
     // Debugmenü
@@ -450,4 +359,5 @@ public class Game {
             }
         }
     }
+
 }

@@ -1,38 +1,34 @@
-import Characters.Chars;
-import Characters.Enemies;
+import audio.SoundFiles;
+import audio.Sounds;
+import characters.Chars;
+import characters.Enemies;
+import characters.Player;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 public class Combatsys {
     static Sounds output = new Sounds();
     static Random rng = new Random();
 
+    public Combatsys(Player player, Enemies enemy) {
+        this.player = player;
+        this.enemy = enemy;
+    }
+
     private int finalDamage;
     private static boolean isCritical;
-    private boolean miss;
-
-    private boolean escape = false;
     private boolean running = true;
 
     public int getFinalDamage(Game target) {
         return this.finalDamage;
     }
 
-    public boolean isMiss() {
-        return miss;
-    }
-
-    public void setEscape(boolean escape) {
-        this.escape = escape;
-    }
-
     public int calcDamage(Game target) throws InterruptedException {
-        if (escape == true) {
+        if (player.escape == true) {
             escapeFight();
             return 0;
         }
-        int baseDamage = Math.max(0, Game.player.getStr() - Game.target.getDef());
+        int baseDamage = Math.max(0, player.getStr() - enemy.getDef());
 //        miss = (rng.nextInt(100) < 10);
         isCritical = (rng.nextInt(100) < 15);
         finalDamage = isCritical ? baseDamage * 2 : baseDamage;
@@ -50,33 +46,17 @@ public class Combatsys {
         target.setHp(target.getHp() - this.finalDamage);
     }
 
-    public void escapeFight() throws InterruptedException {
-        boolean escapeChance = (rng.nextInt(100) < 80);
-
-        if (escapeChance == true) {
-            System.out.println("Du bist geflüchtet");
-            output.playSound("escape.wav");
-            escape = true;
-            Game.running = false;
-        } else {
-            System.out.println("Du konntest nicht flüchten");
-            Thread.sleep(200);
-            output.playSound("inputFail.wav");
-            escape = false;
-        }
-    }
-
-    public static String showCritAndHitSound (Chars enemy) {
+    public static String showCritAndHitSound(Chars enemy) {
         if (enemy == Game.player && isCritical == true) {
             output.playSound(SoundFiles.CLOUDCRIT.getFileName());
             return "*kritischer Treffer!*";
         } else if (enemy == Game.player) {
             output.playSound("cloudHit.wav");
             return "";
-        } else if (enemy == Game.skelett && isCritical == true) {
+        } else if (enemy == Game.enemy && isCritical == true) {
             output.playSound("normalHit.wav");
             return "*kritischer Treffer!*";
-        } else if (enemy == Game.skelett) {
+        } else if (enemy == Game.enemy) {
             output.playSound("normalHit.wav");
             return "";
         }

@@ -1,6 +1,4 @@
-package Characters;
-
-import java.util.ArrayList;
+package characters;
 
 public class Enemies extends Chars {
 

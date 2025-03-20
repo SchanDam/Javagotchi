@@ -1,4 +1,4 @@
-package Characters;
+package characters;
 
 public abstract class Chars {
 
@@ -7,6 +7,7 @@ public abstract class Chars {
     protected int hp;
     protected int maxHp;
     protected String name;
+    protected boolean miss;
 
     public Chars(String name, int getStr, int getDef, int getHp) {
         this.str = getStr;
@@ -50,5 +51,13 @@ public abstract class Chars {
 
     public int getMaxHp() {
         return maxHp;
+    }
+
+    public boolean isMiss() {
+        return miss;
+    }
+
+    public void setMiss(boolean miss) {
+        this.miss = miss;
     }
 }
